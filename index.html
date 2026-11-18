@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#4f6df5">
+<title>Помощник продавца</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --bg:#f2f4f9; --card:#ffffff; --text:#1c2333; --muted:#6b7486;
+  --accent:#4f6df5; --accent-soft:#e8edff; --border:#e3e7f0; --shadow:0 2px 10px rgba(28,35,51,.08);
+  --radius:16px; --gap:12px; --pad:12px; --maxw:760px;
+}
+[data-theme="dark"]{
+  --bg:#070b14; --card:#0f1626; --text:#dfe7f5; --muted:#8b99b5;
+  --accent:#5b8cff; --accent-soft:#16233f; --border:#1e2b47; --shadow:0 2px 12px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45;min-height:100dvh;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) 90px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 0 8px;padding-top:calc(12px + env(safe-area-inset-top))}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{border:none;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
+.btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.btn.small{padding:8px 12px;font-size:14px;border-radius:10px}
+.icon-btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-btn svg{width:19px;height:19px;stroke:var(--text);fill:none;stroke-width:2}
+.tabs{display:flex;gap:8px;margin:10px 0 0;width:100%}
+.tab{flex:1;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.view-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+/* Плитки категорий */
+#catsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+@media (min-width:600px){#catsGrid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:900px){#catsGrid{grid-template-columns:repeat(4,1fr)}}
+.cat-tile{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px 12px;text-align:center;cursor:pointer;border:1px solid var(--border);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.cat-tile .emoji{font-size:42px;line-height:1}
+.cat-tile .name{font-size:14px;font-weight:700;overflow-wrap:anywhere}
+/* Экран категории */
+#categoryView{display:none}
+.back-btn{background:none;border:none;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;padding:10px 0;display:flex;align-items:center;gap:6px}
+.cat-title{font-size:20px;font-weight:700;margin:6px 0 10px}
+.empty{text-align:center;color:var(--muted);padding:50px 20px}
+/* Диалоги */
+.dlg{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,20,35,.5)}
+.dlg.show{display:flex}
+.dlg-box{background:var(--card);border-radius:16px;padding:20px;max-width:400px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.3);max-height:90dvh;overflow-y:auto}
+.dlg-box h3{font-size:17px;margin-bottom:14px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.field input,.field textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:16px;font-family:inherit;outline:none;background:var(--card);color:var(--text)}
+.field input:focus{border-color:var(--accent)}
+.dlg-actions{display:flex;gap:10px}
+.dlg-actions .btn{flex:1}
+/* Тосты */
+#toasts{position:fixed;left:0;right:0;bottom:20px;z-index:100;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px}
+.toast{background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.product-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;cursor:pointer}
+.product-card .img{width:100%;height:180px;object-fit:cover;display:block;background:#ddd}
+.product-card .placeholder{width:100%;height:180px;display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--accent-soft)}
+.product-card .body{padding:12px 14px}
+.product-card h3{font-size:16px;margin-bottom:4px}
+.product-card .brand{font-size:13px;color:var(--muted);margin-bottom:4px}
+.product-card .price{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.product-card .short{font-size:14px;color:var(--muted)}
+.product-card .details{display:none;padding:0 14px 14px;border-top:1px solid var(--border);margin-top:8px}
+.product-card.open .details{display:block}
+.spec-group{margin-top:10px}
+.spec-group h4{font-size:13px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.spec-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border);font-size:14px}
+.spec-row:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="top">
+      <h1>Помощник продавца</h1>
+      <button class="icon-btn" id="themeBtn" title="Сменить тему">🌙</button>
+      <button class="btn secondary small" id="loginBtn">Войти</button>
+      <button class="btn secondary small" id="logoutBtn" style="display:none">Выйти</button>
+    </div>
+    <div class="tabs" id="mainTabs">
+      <button class="tab active" data-tab="home">Главная</button>
+      <button class="tab" data-tab="glossary">Справочник</button>
+    </div>
+  </header>
+
+  <!-- ГЛАВНАЯ: плитки категорий -->
+  <div id="homeView">
+    <div class="view-actions">
+      <button class="btn small" id="addCatBtn" style="display:none">+ Категория</button>
+    </div>
+    <div id="catsGrid"></div>
+  </div>
+
+  <!-- ЭКРАН КАТЕГОРИИ -->
+  <div id="categoryView">
+  <button class="back-btn" id="backBtn">← Назад</button>
+  <div class="cat-title" id="catTitle"></div>
+
+  <div class="view-actions">
+    <button class="btn small" id="addProductBtn" style="display:none">+ Товар</button>
+  </div>
+
+  <div class="search" style="margin-top:10px;position:relative">
+    <input type="search" id="prodSearch" placeholder="Поиск по названию..." autocomplete="off"
+      style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:14px;font-size:16px;background:var(--card);color:var(--text);outline:none">
+  </div>
+
+  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+    <button class="btn secondary small" id="sortPriceAsc">Цена ↑</button>
+    <button class="btn secondary small" id="sortPriceDesc">Цена ↓</button>
+  </div>
+
+  <div id="productsList" style="margin-top:12px"></div>
+</div>
+
+<!-- Диалог категории -->
+<div class="dlg" id="catDlg">
+  <div class="dlg-box">
+    <h3>Новая категория</h3>
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="catName" placeholder="Телевизоры">
+    </div>
+    <div class="field">
+      <label>Эмодзи</label>
+      <input type="text" id="catEmoji" placeholder="📺" maxlength="4">
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="catCancel">Отмена</button>
+      <button class="btn" id="catSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Диалог входа -->
+<div class="dlg" id="loginDlg">
+  <div class="dlg-box">
+    <h3>Вход для администратора</h3>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@example.com">
+    </div>
+    <div class="field">
+      <label>Пароль</label>
+      <input type="password" id="loginPass" placeholder="••••••••">
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="loginCancel">Отмена</button>
+      <button class="btn" id="loginSubmit">Войти</button>
+    </div>
+  </div>
+</div>
+
+<div class="dlg" id="prodDlg">
+  <div class="dlg-box">
+    <h3 id="prodDlgTitle">Новый товар</h3>
+    <div class="field">
+      <label>Ссылка на фото (ImgBB)</label>
+      <input type="text" id="pImage" placeholder="https://i.ibb.co/...">
+    </div>
+    <div class="field">
+      <label>Название</label>
+      <input type="text" id="pName" placeholder="Samsung QLED Q60D 55&quot;">
+    </div>
+    <div class="field">
+      <label>Бренд</label>
+      <input type="text" id="pBrand" placeholder="Samsung">
+    </div>
+    <div class="field">
+      <label>Цена (необязательно)</label>
+      <input type="number" id="pPrice" placeholder="49990">
+    </div>
+    <div class="field">
+      <label>Краткое описание</label>
+      <textarea id="pShort" placeholder="4K QLED, 55&quot;, Smart TV"></textarea>
+    </div>
+    <div class="field">
+      <label>Характеристики (каждая с новой строки: Группа | Ключ | Значение)</label>
+      <textarea id="pSpecs" style="min-height:120px" placeholder="Экран | Диагональ | 55&quot;&#10;Экран | Тип матрицы | QLED&#10;Звук | Мощность | 20 Вт"></textarea>
+      <div class="hint" style="font-size:12.5px;color:var(--muted);margin-top:4px">Пример: <code>Экран | Разрешение | 4K UHD</code></div>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="prodCancel">Отмена</button>
+      <button class="btn" id="prodSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// ============================================
+// 1. FIREBASE CONFIG (твой)
+// ============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDEHif3aB05Q7afZYdx4AE66qNH4ObnhhY",
+  authDomain: "pomoshnik-prodavca.firebaseapp.com",
+  projectId: "pomoshnik-prodavca",
+  storageBucket: "pomoshnik-prodavca.firebasestorage.app",
+  messagingSenderId: "493490305518",
+  appId: "1:493490305518:web:7679490e482b066c3276ff",
+  measurementId: "G-EB23E29XVW"
+};
+const ADMIN_UID = "j3qe8ZSSYzb6cR3mZ6BfvPX8yrB2";
+
+// ============================================
+// 2. ИМПОРТЫ
+// ============================================
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
+import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, addDoc, query, orderBy, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+enableIndexedDbPersistence(db).catch(()=>{});
+
+// ============================================
+// 3. СОСТОЯНИЕ
+// ============================================
+let categories = [];
+let currentCat = null;
+let isAdmin = false;
+
+// ============================================
+// 4. УТИЛИТЫ
+// ============================================
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(msg, isErr){
+  const box = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  box.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(), 250); }, 2200);
+}
+function genId(){ return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+// ============================================
+// ТОВАРЫ
+// ============================================
+let products = [];
+let prodQuery = '';
+let prodSort = null; // 'asc' | 'desc' | null
+
+async function loadProducts(catId){
+  try{
+    const snapshot = await getDocs(collection(db, 'products'));
+    products = [];
+    snapshot.forEach(d=>{
+      const x = d.data();
+      if(x.categoryId === catId){
+        products.push({
+          id: d.id,
+          name: x.name||'',
+          brand: x.brand||'',
+          price: x.price ?? null,
+          imageUrl: x.imageUrl||'',
+          shortDesc: x.shortDesc||'',
+          specs: Array.isArray(x.specs) ? x.specs : []
+        });
+      }
+    });
+    renderProducts();
+  }catch(e){
+    console.error(e);
+    toast('Ошибка загрузки товаров', true);
+  }
+}
+
+function parseSpecs(text){
+  return text.split('\n').map(l=>l.trim()).filter(Boolean).map(line=>{
+    const parts = line.split('|').map(s=>s.trim());
+    if(parts.length >= 3) return { group: parts[0], key: parts[1], value: parts.slice(2).join(' ') };
+    if(parts.length === 2) return { group: 'Общее', key: parts[0], value: parts[1] };
+    return { group: 'Общее', key: parts[0], value: '' };
+  });
+}
+
+function renderProducts(){
+  const box = document.getElementById('productsList');
+  let list = products.slice();
+  if(prodQuery){
+    const q = prodQuery.toLowerCase();
+    list = list.filter(p=>p.name.toLowerCase().includes(q));
+  }
+  if(prodSort === 'asc') list.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));
+  if(prodSort === 'desc') list.sort((a,b)=>(b.price??-Infinity)-(a.price??-Infinity));
+
+  if(!list.length){
+    box.innerHTML = `<div class="empty">Товаров пока нет.${isAdmin?' Нажмите «+ Товар».':''}</div>`;
+    return;
+  }
+
+  box.innerHTML = list.map(p=>{
+    const groups = {};
+    (p.specs||[]).forEach(s=>{
+      if(!groups[s.group]) groups[s.group] = [];
+      groups[s.group].push(s);
+    });
+    return `
+      <div class="product-card" data-pid="${esc(p.id)}">
+        ${p.imageUrl ? `<img class="img" src="${esc(p.imageUrl)}" alt="${esc(p.name)}" loading="lazy">` : `<div class="placeholder">📦</div>`}
+        <div class="body">
+          <h3>${esc(p.name)}</h3>
+          ${p.brand ? `<div class="brand">${esc(p.brand)}</div>` : ''}
+          ${p.price!=null ? `<div class="price">${p.price.toLocaleString('ru-RU')} ₽</div>` : `<div class="price">Цена по запросу</div>`}
+          ${p.shortDesc ? `<div class="short">${esc(p.shortDesc)}</div>` : ''}
+        </div>
+        <div class="details">
+          ${Object.keys(groups).map(g=>`
+            <div class="spec-group">
+              <h4>${esc(g)}</h4>
+              ${groups[g].map(s=>`<div class="spec-row"><span>${esc(s.key)}</span><span>${esc(s.value)}</span></div>`).join('')}
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// Клик по карточке — раскрыть/свернуть
+document.getElementById('productsList').addEventListener('click', e=>{
+  const card = e.target.closest('.product-card'); if(!card) return;
+  card.classList.toggle('open');
+});
+
+// Поиск
+let prodTimer = null;
+document.getElementById('prodSearch').addEventListener('input', e=>{
+  const v = e.target.value.trim();
+  clearTimeout(prodTimer);
+  prodTimer = setTimeout(()=>{ prodQuery = v; renderProducts(); }, 150);
+});
+
+// Сортировка
+document.getElementById('sortPriceAsc').onclick = ()=>{ prodSort = 'asc'; renderProducts(); };
+document.getElementById('sortPriceDesc').onclick = ()=>{ prodSort = 'desc'; renderProducts(); };
+
+// Добавление товара
+document.getElementById('addProductBtn').onclick = ()=>{
+  document.getElementById('prodDlgTitle').textContent = 'Новый товар';
+  ['pImage','pName','pBrand','pPrice','pShort','pSpecs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('prodDlg').classList.add('show');
+};
+document.getElementById('prodCancel').onclick = ()=>document.getElementById('prodDlg').classList.remove('show');
+document.getElementById('prodSave').onclick = async ()=>{
+  if(!isAdmin){ toast('Только администратор', true); return; }
+  if(!currentCat){ toast('Сначала выберите категорию', true); return; }
+  const name = document.getElementById('pName').value.trim();
+  if(!name){ toast('Введите название', true); return; }
+  const priceRaw = document.getElementById('pPrice').value.trim();
+  const data = {
+    categoryId: currentCat.id,
+    name,
+    brand: document.getElementById('pBrand').value.trim(),
+    price: priceRaw === '' ? null : Number(priceRaw),
+    imageUrl: document.getElementById('pImage').value.trim(),
+    shortDesc: document.getElementById('pShort').value.trim(),
+    specs: parseSpecs(document.getElementById('pSpecs').value)
+  };
+  try{
+    const id = 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    await setDoc(doc(db, 'products', id), data);
+    document.getElementById('prodDlg').classList.remove('show');
+    toast('Товар добавлен');
+    await loadProducts(currentCat.id);
+  }catch(e){
+    console.error(e);
+    toast('Ошибка сохранения товара', true);
+  }
+};
+
+// ============================================
+// 5. КАТЕГОРИИ ИЗ FIRESTORE
+// ============================================
+async function loadCategories(){
+  try{
+    const snapshot = await getDocs(collection(db, 'categories'));
+    categories = [];
+    snapshot.forEach(d=>{
+      const x = d.data();
+      categories.push({ id:d.id, name:x.name||'', emoji:x.emoji||'📦', order:x.order||0 });
+    });
+    categories.sort((a,b)=>(a.order||0)-(b.order||0));
+    renderCats();
+  }catch(e){
+    console.error(e);
+    toast('Ошибка загрузки категорий', true);
+  }
+}
+
+async function saveCategory(data){
+  if(!isAdmin){ toast('Только администратор', true); return; }
+  try{
+    const id = genId();
+    await setDoc(doc(db, 'categories', id), { ...data, order: categories.length });
+    await loadCategories();
+    toast('Категория добавлена');
+  }catch(e){
+    console.error(e);
+    toast('Ошибка сохранения', true);
+  }
+}
+
+// ============================================
+// 6. РЕНДЕР
+// ============================================
+function renderCats(){
+  const grid = document.getElementById('catsGrid');
+  if(!categories.length){
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Категорий пока нет.${isAdmin?' Нажмите «+ Категория».':''}</div>`;
+    return;
+  }
+  grid.innerHTML = categories.map(c=>`
+    <div class="cat-tile" data-cat="${esc(c.id)}">
+      <div class="emoji">${esc(c.emoji)}</div>
+      <div class="name">${esc(c.name)}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================
+// 7. НАВИГАЦИЯ
+// ============================================
+document.getElementById('catsGrid').addEventListener('click', e=>{
+  const tile = e.target.closest('[data-cat]'); if(!tile) return;
+  const cat = categories.find(c=>c.id===tile.dataset.cat);
+  if(!cat) return;
+  currentCat = cat;
+  document.getElementById('catTitle').textContent = cat.emoji+' '+cat.name;
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('categoryView').style.display = 'block';
+  document.getElementById('glossaryView').style.display = 'none';
+  loadProducts(cat.id);
+});
+
+document.getElementById('backBtn').onclick = ()=>{
+  currentCat = null;
+  document.getElementById('categoryView').style.display = 'none';
+  document.getElementById('homeView').style.display = 'block';
+};
+
+document.getElementById('mainTabs').addEventListener('click', e=>{
+  const tab = e.target.closest('.tab'); if(!tab) return;
+  const name = tab.dataset.tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t===tab));
+  document.getElementById('homeView').style.display = name==='home' ? 'block' : 'none';
+  document.getElementById('categoryView').style.display = 'none';
+  document.getElementById('glossaryView').style.display = name==='glossary' ? 'block' : 'none';
+});
+
+// ============================================
+// 8. ДОБАВЛЕНИЕ КАТЕГОРИИ
+// ============================================
+document.getElementById('addCatBtn').onclick = ()=>{
+  document.getElementById('catName').value = '';
+  document.getElementById('catEmoji').value = '';
+  document.getElementById('catDlg').classList.add('show');
+};
+document.getElementById('catCancel').onclick = ()=>document.getElementById('catDlg').classList.remove('show');
+document.getElementById('catSave').onclick = async ()=>{
+  const name = document.getElementById('catName').value.trim();
+  const emoji = document.getElementById('catEmoji').value.trim() || '📦';
+  if(!name){ toast('Введите название', true); return; }
+  await saveCategory({ name, emoji });
+  document.getElementById('catDlg').classList.remove('show');
+};
+
+// ============================================
+// 9. АВТОРИЗАЦИЯ
+// ============================================
+document.getElementById('loginBtn').onclick = ()=>document.getElementById('loginDlg').classList.add('show');
+document.getElementById('loginCancel').onclick = ()=>document.getElementById('loginDlg').classList.remove('show');
+document.getElementById('loginSubmit').onclick = async ()=>{
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if(!email || !pass){ toast('Введите email и пароль', true); return; }
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    document.getElementById('loginDlg').classList.remove('show');
+    toast('Вы вошли');
+  }catch(e){ toast('Неверный email или пароль', true); }
+};
+document.getElementById('logoutBtn').onclick = async ()=>{ await signOut(auth); toast('Вы вышли'); };
+
+onAuthStateChanged(auth, (user)=>{
+  isAdmin = !!(user && user.uid === ADMIN_UID);
+  document.getElementById('addCatBtn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('addProductBtn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('loginBtn').style.display = isAdmin ? 'none' : '';
+  document.getElementById('logoutBtn').style.display = isAdmin ? '' : 'none';
+});
+
+// ============================================
+// 10. ТЕМА
+// ============================================
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('sellerTheme', t);
+  document.getElementById('themeBtn').textContent = t==='dark' ? '☀️' : '🌙';
+}
+applyTheme(localStorage.getItem('sellerTheme') || 'light');
+document.getElementById('themeBtn').onclick = ()=>{
+  applyTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+};
+
+// ============================================
+// 11. СТАРТ
+// ============================================
+loadCategories();
+</script>
+</body>
+</html>
