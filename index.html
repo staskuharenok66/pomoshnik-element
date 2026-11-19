@@ -267,7 +267,7 @@ const ADMIN_UID = "j3qe8ZSSYzb6cR3mZ6BfvPX8yrB2";
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
-import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, addDoc, query, orderBy, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
+import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, query, where, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
 
 
 const app = initializeApp(firebaseConfig);
