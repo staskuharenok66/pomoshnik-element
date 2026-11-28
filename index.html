@@ -61,48 +61,83 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .price-range input{width:100%;min-width:70px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);outline:none}
 .price-range span{font-size:13px;color:var(--muted);white-space:nowrap}
 
-.product-card{width:100%;background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;border:1px solid var(--border)}
-.card-main{display:flex;gap:12px;padding:12px;cursor:pointer;align-items:flex-start}
-.card-thumb{width:96px;height:96px;aspect-ratio:1/1;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--accent-soft);border:1px solid var(--border)}
-.card-placeholder{width:96px;height:96px;aspect-ratio:1/1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--accent-soft);flex-shrink:0}
-@media (min-width:480px){.card-thumb,.card-placeholder{width:104px;height:104px}}
-.card-info{flex:1;min-width:0}
-.card-brand{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.3px;overflow-wrap:anywhere}
-.card-info h3{font-size:16px;font-weight:700;margin:2px 0 4px;line-height:1.3;overflow-wrap:anywhere}
-.card-price{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.card-short{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-.product-card.open .card-short{-webkit-line-clamp:unset}
-.card-toggle-hint{font-size:12px;color:var(--accent);font-weight:600;margin-top:6px;display:inline-block}
+/* === КАРТОЧКА ТОВАРА === */
+.product-card{width:100%;background:var(--card);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px;border:1px solid var(--border);transition:border-color .2s,box-shadow .2s}
+.product-card.open{border-color:var(--accent);box-shadow:0 6px 22px rgba(79,109,245,.14)}
 
-.product-card .details{display:none;padding:12px 12px 14px;border-top:1px solid var(--border);min-width:0}
+.card-main{display:flex;gap:14px;padding:14px;cursor:pointer;align-items:flex-start;transition:background .15s}
+.card-main:active{background:var(--bg)}
+.card-thumb{width:92px;height:92px;aspect-ratio:1/1;border-radius:14px;object-fit:cover;flex-shrink:0;background:var(--bg);border:1px solid var(--border)}
+.card-placeholder{width:92px;height:92px;aspect-ratio:1/1;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--accent-soft);border:1px solid var(--border);flex-shrink:0}
+@media (min-width:480px){.card-thumb,.card-placeholder{width:108px;height:108px}}
+
+.card-info{flex:1;min-width:0}
+.card-brand{display:inline-block;padding:2px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;overflow-wrap:anywhere}
+.card-info h3{font-size:16.5px;font-weight:700;margin:0 0 6px;line-height:1.3;color:var(--text);overflow-wrap:anywhere}
+.card-price{font-size:16.5px;font-weight:800;color:var(--accent);margin-bottom:6px;letter-spacing:-.2px}
+.card-price.muted{font-size:14px;font-weight:600;color:var(--muted)}
+.card-short{font-size:13.5px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.product-card.open .card-short{-webkit-line-clamp:unset}
+
+.card-toggle-hint{display:inline-flex;align-items:center;gap:4px;margin-top:9px;padding:4px 11px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--accent);transition:background .15s,border-color .15s}
+.product-card.open .card-toggle-hint{background:var(--accent-soft);border-color:var(--accent)}
+
+/* Развёрнутая часть карточки */
+.product-card .details{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);min-width:0}
 .product-card.open .details{display:block}
-.detail-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-.d-tab{flex:1 1 auto;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer;text-align:center;line-height:1.25;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
-.d-tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+
+/* Кнопки-вкладки внутри карточки */
+.detail-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:6px;background:var(--bg);border-radius:14px;border:1px solid var(--border)}
+.d-tab{flex:1 1 auto;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer;text-align:center;line-height:1.25;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.d-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 6px rgba(79,109,245,.25)}
+
 .d-pane{display:none;min-width:0}
 .d-pane.active{display:block}
+.empty-pane{font-size:13.5px;color:var(--muted);text-align:center;padding:16px 10px;background:var(--bg);border-radius:12px;border:1px dashed var(--border)}
 
-.spec-group{margin-top:10px}
+/* Характеристики */
+.spec-group{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:10px}
 .spec-group:first-child{margin-top:0}
-.spec-group h4{font-size:12px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.spec-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:7px 0;border-bottom:1px dashed var(--border);font-size:14px}
-.spec-row:last-child{border-bottom:none}
+.spec-group h4{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.spec-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:13.5px;line-height:1.4}
+.spec-row:last-child{border-bottom:none;padding-bottom:0}
 .spec-row span:first-child{color:var(--muted);min-width:0;overflow-wrap:anywhere}
 .spec-row span:last-child{font-weight:600;text-align:right;min-width:0;overflow-wrap:anywhere}
 
-.features-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:6px}
-.features-list li{font-size:14px;padding:8px 10px;background:var(--bg);border-radius:10px;border-left:3px solid var(--accent);overflow-wrap:anywhere}
+/* Характеристики ИИ — вертикальное чтение длинных описаний */
+.spec-group.ai-group{border-left:3px solid var(--accent)}
+.spec-group.ai-group .spec-row{flex-direction:column;gap:3px;padding:8px 0}
+.spec-group.ai-group .spec-row span:first-child{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.spec-group.ai-group .spec-row span:last-child{text-align:left;font-weight:500;font-size:14px;color:var(--text)}
 
-.pros-cons{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+/* Особенности */
+.features-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:2px}
+.features-list li{position:relative;font-size:14px;line-height:1.45;padding:9px 12px 9px 34px;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow-wrap:anywhere}
+.features-list li::before{content:"✓";position:absolute;left:10px;top:10px;width:18px;height:18px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+/* Плюсы и минусы */
+.pros-cons{display:grid;grid-template-columns:1fr;gap:10px;margin-top:2px}
 @media (min-width:520px){.pros-cons{grid-template-columns:1fr 1fr}}
-.pc-box{padding:10px;border-radius:12px;font-size:13.5px;min-width:0;overflow-wrap:anywhere}
-.pc-box.pros{background:var(--good-bg);color:var(--good)}
-.pc-box.cons{background:var(--bad-bg);color:var(--bad)}
-.pc-box h5{font-size:13px;font-weight:700;margin-bottom:6px;text-transform:uppercase}
-.pc-box ul{padding-left:16px;display:flex;flex-direction:column;gap:4px}
-.pc-box li{color:var(--text)}
+.pc-box{padding:12px;border-radius:12px;font-size:13.5px;min-width:0;overflow-wrap:anywhere;border:1px solid transparent}
+.pc-box.pros{background:var(--good-bg);color:var(--good);border-color:rgba(22,163,74,.25)}
+.pc-box.cons{background:var(--bad-bg);color:var(--bad);border-color:rgba(220,38,38,.25)}
+.pc-box h5{font-size:12.5px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+.pc-box ul{padding-left:16px;display:flex;flex-direction:column;gap:5px}
+.pc-box li{color:var(--text);line-height:1.4}
 
-.admin-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+/* Отзывы */
+.review-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;overflow-wrap:anywhere}
+.review-card:first-child{margin-top:0}
+.review-source{display:inline-block;font-size:11.5px;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:2px 8px;border-radius:8px;margin-bottom:7px}
+.review-text{font-size:14px;line-height:1.45;margin-bottom:8px;color:var(--text)}
+.review-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.review-badge{font-size:12px;padding:3px 8px;border-radius:8px;font-weight:600}
+.review-badge.pro{background:var(--good-bg);color:var(--good)}
+.review-badge.con{background:var(--bad-bg);color:var(--bad)}
+.review-badge.defect{background:#fef3c7;color:#92400e}
+[data-theme="dark"] .review-badge.defect{background:#3b2a05;color:#fbbf24}
+
+.admin-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 
 .dlg{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(15,20,35,.55)}
 .dlg.show{display:flex}
@@ -118,6 +153,7 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 #toasts{position:fixed;left:0;right:0;bottom:20px;z-index:120;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px}
 .toast{background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s}
 .toast.show{opacity:1;transform:translateY(0)}
+
 /* Справочник: 3-уровневая навигация и прямоугольные кнопки */
 .rect-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .rect-btn{position:relative;display:flex;align-items:center;gap:14px;width:100%;min-height:62px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);color:var(--text);text-align:left;cursor:pointer;transition:transform .1s}
@@ -139,17 +175,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .term-short{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.45}
 .term-details{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px;color:var(--text);line-height:1.5;white-space:pre-line}
 .term-card.open .term-details{display:block}
-
-/* Отзывы */
-.review-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:8px;overflow-wrap:anywhere}
-.review-source{font-size:11.5px;color:var(--muted);margin-bottom:4px;font-style:italic}
-.review-text{font-size:14px;line-height:1.45;margin-bottom:8px}
-.review-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
-.review-badge{font-size:12px;padding:3px 8px;border-radius:8px;font-weight:600}
-.review-badge.pro{background:var(--good-bg);color:var(--good)}
-.review-badge.con{background:var(--bad-bg);color:var(--bad)}
-.review-badge.defect{background:#fef3c7;color:#92400e}
-[data-theme="dark"] .review-badge.defect{background:#3b2a05;color:#fbbf24}
 
 /* Кликабельные ссылки на термины внутри карточки товара */
 .term-link{color:var(--accent);font-weight:700;border-bottom:1.5px dashed var(--accent);cursor:pointer;padding:0 2px;border-radius:4px;transition:background .15s}
@@ -620,42 +645,42 @@ function renderProducts(){
           <div class="card-info">
             ${p.brand ? `<div class="card-brand">${esc(p.brand)}</div>` : ''}
             <h3>${esc(p.name)}</h3>
-            <div class="card-price">${p.price!=null ? Number(p.price).toLocaleString('ru-RU') + ' ₽' : 'Цена по запросу'}</div>
+            <div class="card-price${p.price!=null ? '' : ' muted'}">${p.price!=null ? Number(p.price).toLocaleString('ru-RU') + ' ₽' : 'Цена по запросу'}</div>
             ${p.shortDesc ? `<div class="card-short">${esc(p.shortDesc)}</div>` : ''}
             <span class="card-toggle-hint">Подробнее ▾</span>
           </div>
         </div>
         <div class="details">
           <div class="detail-tabs">
-            <button class="d-tab active" data-pane="specs">Характеристики</button>
-            <button class="d-tab" data-pane="aiSpecs">Характеристики ИИ</button>
-            <button class="d-tab" data-pane="features">Особенности</button>
-            <button class="d-tab" data-pane="proscons">Плюсы и минусы</button>
-            <button class="d-tab" data-pane="reviews">Отзывы</button>
+            <button class="d-tab active" data-pane="specs">📋 Характеристики</button>
+            <button class="d-tab" data-pane="aiSpecs">✨ Характеристики ИИ</button>
+            <button class="d-tab" data-pane="features">⚡ Особенности</button>
+            <button class="d-tab" data-pane="proscons">⚖️ Плюсы и минусы</button>
+            <button class="d-tab" data-pane="reviews">💬 Отзывы</button>
           </div>
           <div class="d-pane active" data-pane-box="specs">
             ${hasSpecs ? Object.keys(groups).map(g=>`
               <div class="spec-group">
                 <h4>${esc(g)}</h4>
                 ${groups[g].map(s=>`<div class="spec-row"><span>${esc(s.key)}</span><span>${linkifyTerms(s.value, p.brand)}</span></div>`).join('')}
-              </div>`).join('') : '<div style="font-size:13px;color:var(--muted);padding:6px 0">Характеристики не указаны</div>'}
+              </div>`).join('') : '<div class="empty-pane">Характеристики не указаны</div>'}
           </div>
           <div class="d-pane" data-pane-box="features">
             ${hasFeatures ? `<ul class="features-list">${p.features.map(f=>`<li>${linkifyTerms(f, p.brand)}</li>`).join('')}</ul>`
-              : '<div style="font-size:13px;color:var(--muted);padding:6px 0">Особенности не добавлены</div>'}
+              : '<div class="empty-pane">Особенности не добавлены</div>'}
           </div>
           <div class="d-pane" data-pane-box="proscons">
             ${hasProsCons ? `
               <div class="pros-cons">
                 <div class="pc-box pros">
-                  <h5>Плюсы</h5>
+                  <h5>👍 Плюсы</h5>
                   ${p.pros.length ? `<ul>${p.pros.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>` : '<div>Не указаны</div>'}
                 </div>
                 <div class="pc-box cons">
-                  <h5>Минусы</h5>
+                  <h5>👎 Минусы</h5>
                   ${p.cons.length ? `<ul>${p.cons.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>` : '<div>Не указаны</div>'}
                 </div>
-              </div>` : '<div style="font-size:13px;color:var(--muted);padding:6px 0">Плюсы и минусы не указаны</div>'}
+              </div>` : '<div class="empty-pane">Плюсы и минусы не указаны</div>'}
           </div>
           <div class="d-pane" data-pane-box="aiSpecs">
             ${(()=>{
@@ -665,21 +690,21 @@ function renderProducts(){
                 aiGroups[s.group].push(s);
               });
               return Object.keys(aiGroups).length ? Object.keys(aiGroups).map(g=>`
-                <div class="spec-group">
-                  <h4>${esc(g)}</h4>
+                <div class="spec-group ai-group">
+                  <h4>✨ ${esc(g)}</h4>
                   ${aiGroups[g].map(s=>`<div class="spec-row"><span>${esc(s.key)}</span><span>${linkifyTerms(s.value, p.brand)}</span></div>`).join('')}
-                </div>`).join('') : '<div style="font-size:13px;color:var(--muted);padding:6px 0">Характеристики ИИ не добавлены</div>';
+                </div>`).join('') : '<div class="empty-pane">Характеристики ИИ не добавлены</div>';
             })()}
           </div>
           <div class="d-pane" data-pane-box="reviews">
             ${(p.reviews && p.reviews.length) ? p.reviews.map(r=>`
               <div class="review-card">
-                ${r.source ? `<div class="review-source">Источник: ${esc(r.source)}</div>` : ''}
+                ${r.source ? `<div class="review-source">💬 ${esc(r.source)}</div>` : ''}
                 ${r.text ? `<div class="review-text">${esc(r.text)}</div>` : ''}
                 ${r.pros.length ? `<div class="review-row">${r.pros.map(x=>`<span class="review-badge pro">+ ${esc(x)}</span>`).join('')}</div>` : ''}
                 ${r.cons.length ? `<div class="review-row">${r.cons.map(x=>`<span class="review-badge con">− ${esc(x)}</span>`).join('')}</div>` : ''}
                 ${r.defects.length ? `<div class="review-row">${r.defects.map(x=>`<span class="review-badge defect">⚠ ${esc(x)}</span>`).join('')}</div>` : ''}
-              </div>`).join('') : '<div style="font-size:13px;color:var(--muted);padding:6px 0">Отзывов пока нет</div>'}
+              </div>`).join('') : '<div class="empty-pane">Отзывов пока нет</div>'}
           </div>
           ${isAdmin ? `
             <div class="admin-card-actions">
