@@ -10,12 +10,13 @@
 :root{
   --bg:#f2f4f9; --card:#ffffff; --text:#1c2333; --muted:#6b7486;
   --accent:#4f6df5; --accent-soft:#e8edff; --border:#e3e7f0; --shadow:0 2px 10px rgba(28,35,51,.08);
-  --danger:#e5484d; --radius:16px; --gap:12px; --pad:12px; --maxw:760px;
+  --good:#16a34a; --good-bg:#dcfce7; --bad:#dc2626; --bad-bg:#fee2e2;
+  --radius:16px; --gap:12px; --pad:12px; --maxw:760px;
 }
 [data-theme="dark"]{
   --bg:#070b14; --card:#0f1626; --text:#dfe7f5; --muted:#8b99b5;
   --accent:#5b8cff; --accent-soft:#16233f; --border:#1e2b47; --shadow:0 2px 12px rgba(0,0,0,.5);
-  --danger:#ff6369;
+  --good:#4ade80; --good-bg:#052e16; --bad:#f87171; --bad-bg:#450a0a;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45;min-height:100dvh;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
@@ -25,102 +26,137 @@ header{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 0 8px;
 h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn{border:none;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
 .btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
-.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--border)}
+.btn.secondary.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.btn.danger{background:var(--bad-bg);color:var(--bad);border:1px solid transparent}
 .btn.small{padding:8px 12px;font-size:14px;border-radius:10px}
-.btn.active-sort{background:var(--accent);color:#fff;border-color:var(--accent)}
 .icon-btn{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .tabs{display:flex;gap:8px;margin:10px 0 0;width:100%}
 .tab{flex:1;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;text-align:center}
 .tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .view-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.search-input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:14px;font-size:16px;background:var(--card);color:var(--text);outline:none;margin-top:10px}
-.search-input:focus{border-color:var(--accent)}
-.filters-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.filter-select{flex:1;min-width:140px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;font-size:14px;font-family:inherit;background:var(--card);color:var(--text);outline:none}
 
-/* Плитки категорий */
 #catsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
 @media (min-width:600px){#catsGrid{grid-template-columns:repeat(3,1fr)}}
 @media (min-width:900px){#catsGrid{grid-template-columns:repeat(4,1fr)}}
-.cat-tile{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px 12px;text-align:center;cursor:pointer;border:1px solid var(--border);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-.cat-tile .emoji{font-size:42px;line-height:1}
-.cat-tile .name{font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.cat-tile{position:relative;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px 12px;text-align:center;cursor:pointer;border:1px solid var(--border);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:transform .1s}
+.cat-tile:active{transform:scale(.97)}
+.cat-tile .emoji{font-size:44px;line-height:1}
+.cat-tile .name{font-size:15px;font-weight:700;overflow-wrap:anywhere}
+.cat-del{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--bad);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-/* Экран категории и справочника */
 #categoryView,#glossaryView{display:none}
 .back-btn{background:none;border:none;color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;padding:10px 0;display:flex;align-items:center;gap:6px}
-.cat-title{font-size:20px;font-weight:700;margin:6px 0 10px}
+.cat-title{font-size:20px;font-weight:700;margin:4px 0 10px}
 .empty{text-align:center;color:var(--muted);padding:50px 20px}
 
-/* Диалоги */
-.dlg{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(15,20,35,.5)}
+.filters-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px;margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.search-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:12px;font-size:16px;background:var(--bg);color:var(--text);outline:none}
+.search-input:focus{border-color:var(--accent)}
+.brand-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.brand-chips::-webkit-scrollbar{display:none}
+.chip{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.price-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.price-range{display:flex;align-items:center;gap:6px;flex:1;min-width:200px}
+.price-range input{width:100%;min-width:70px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);outline:none}
+.price-range span{font-size:13px;color:var(--muted);white-space:nowrap}
+
+.product-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;border:1px solid var(--border)}
+.card-main{display:flex;gap:12px;padding:12px;cursor:pointer;align-items:flex-start}
+.card-thumb{width:104px;height:104px;aspect-ratio:1/1;border-radius:12px;object-fit:cover;flex-shrink:0;background:var(--accent-soft);border:1px solid var(--border)}
+.card-placeholder{width:104px;height:104px;aspect-ratio:1/1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--accent-soft);flex-shrink:0}
+.card-info{flex:1;min-width:0}
+.card-brand{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--muted);letter-spacing:.3px}
+.card-info h3{font-size:16px;font-weight:700;margin:2px 0 4px;line-height:1.3}
+.card-price{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.card-short{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-card.open .card-short{-webkit-line-clamp:unset}
+.card-toggle-hint{font-size:12px;color:var(--accent);font-weight:600;margin-top:6px;display:inline-block}
+
+.product-card .details{display:none;padding:0 12px 14px;border-top:1px solid var(--border)}
+.product-card.open .details{display:block}
+.detail-tabs{display:flex;gap:6px;margin:10px 0;overflow-x:auto;scrollbar-width:none}
+.detail-tabs::-webkit-scrollbar{display:none}
+.d-tab{flex:1;padding:7px 8px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer;text-align:center;white-space:nowrap}
+.d-tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.d-pane{display:none}
+.d-pane.active{display:block}
+
+.spec-group{margin-top:10px}
+.spec-group h4{font-size:12px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.spec-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:14px}
+.spec-row:last-child{border-bottom:none}
+.spec-row span:last-child{font-weight:600;text-align:right}
+
+.features-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.features-list li{font-size:14px;padding:8px 10px;background:var(--bg);border-radius:10px;border-left:3px solid var(--accent)}
+
+.pros-cons{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+@media (min-width:520px){.pros-cons{grid-template-columns:1fr 1fr}}
+.pc-box{padding:10px;border-radius:12px;font-size:13.5px}
+.pc-box.pros{background:var(--good-bg);color:var(--good)}
+.pc-box.cons{background:var(--bad-bg);color:var(--bad)}
+.pc-box h5{font-size:13px;font-weight:700;margin-bottom:6px;text-transform:uppercase}
+.pc-box ul{padding-left:16px;display:flex;flex-direction:column;gap:4px}
+.pc-box li{color:var(--text)}
+
+.admin-card-actions{display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+
+.dlg{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(15,20,35,.55)}
 .dlg.show{display:flex}
-.dlg-box{background:var(--card);border-radius:16px;padding:20px;max-width:460px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.3);max-height:90dvh;overflow-y:auto}
-.dlg-box h3{font-size:18px;margin-bottom:12px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
-.field input,.field textarea,.field select{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;outline:none;background:var(--card);color:var(--text)}
-.field textarea{min-height:80px;resize:vertical}
-.field textarea.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;min-height:180px}
+.dlg-box{background:var(--card);border-radius:16px;padding:18px;max-width:460px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.3);max-height:90dvh;overflow-y:auto}
+.dlg-box h3{font-size:17px;margin-bottom:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase}
+.field input,.field textarea,.field select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;outline:none;background:var(--bg);color:var(--text)}
+.field textarea.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;min-height:170px}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
-.check-row{display:flex;align-items:center;gap:10px;font-size:14px;margin-bottom:14px;cursor:pointer}
+.check-row{display:flex;align-items:center;gap:10px;font-size:14px;margin-bottom:12px;cursor:pointer}
 .check-row input{width:18px;height:18px;accent-color:var(--accent)}
 .dlg-actions{display:flex;gap:10px;margin-top:14px}
 .dlg-actions .btn{flex:1}
 
-/* Тосты */
 #toasts{position:fixed;left:0;right:0;bottom:20px;z-index:120;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 12px}
 .toast{background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s}
 .toast.show{opacity:1;transform:translateY(0)}
 
-/* Карточки товаров */
-.product-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:12px;cursor:pointer;border:1px solid var(--border)}
-.product-card .img{width:100%;height:180px;object-fit:cover;display:block;background:#ddd}
-.product-card .placeholder{width:100%;height:180px;display:flex;align-items:center;justify-content:center;font-size:40px;background:var(--accent-soft)}
-.product-card .body{padding:12px 14px}
-.product-card h3{font-size:16px;margin-bottom:4px}
-.product-card .brand{font-size:13px;color:var(--muted);margin-bottom:4px}
-.product-card .price{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:6px}
-.product-card .short{font-size:14px;color:var(--muted);line-height:1.5}
-.product-card .details{display:none;padding:10px 14px 14px;border-top:1px solid var(--border)}
-.product-card.open .details{display:block}
-.spec-group{margin-top:10px}
-.spec-group:first-child{margin-top:0}
-.spec-group h4{font-size:13px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.spec-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:14px}
-.spec-row:last-child{border-bottom:none}
-.spec-row > span:last-child{text-align:right}
+/* Справочник: 3-уровневая навигация и прямоугольные кнопки */
+.rect-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.rect-btn{position:relative;display:flex;align-items:center;gap:14px;width:100%;min-height:62px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);color:var(--text);text-align:left;cursor:pointer;transition:transform .1s}
+.rect-btn:active{transform:scale(.98)}
+.rect-btn.all-terms{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.rect-btn .r-ico{font-size:28px;line-height:1;width:36px;text-align:center;flex-shrink:0}
+.rect-btn .r-info{flex:1;min-width:0}
+.rect-btn .r-title{font-size:16px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.rect-btn .r-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.rect-btn .r-arrow{font-size:18px;color:var(--muted);flex-shrink:0}
+.rect-del{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--bad);font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
-/* Ссылка-термин внутри описания и характеристик */
-.term-link{
-  display:inline;
-  background:var(--accent-soft);
-  color:var(--accent);
-  border:none;
-  border-bottom:1.5px dashed var(--accent);
-  border-radius:6px;
-  padding:1px 6px;
-  font:inherit;
-  font-weight:600;
-  cursor:pointer;
-  line-height:1.35;
-}
-.term-link:active{opacity:.75}
+/* Карточки терминов */
+.term-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer}
+.term-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.term-title{font-size:16px;font-weight:700;color:var(--text)}
+.term-badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.term-tag{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:8px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.term-short{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.45}
+.term-details{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px;color:var(--text);line-height:1.5;white-space:pre-line}
+.term-card.open .term-details{display:block}
 
-/* Справочник и бейджи */
-.badges-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.badge{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
-.badge.brand-badge{background:var(--bg);color:var(--text);border:1px solid var(--border)}
-.glossary-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin-bottom:10px;cursor:pointer;border:1px solid var(--border)}
-.glossary-card .g-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
-.glossary-card h3{font-size:16px;font-weight:700}
-.glossary-card .aliases{font-size:12.5px;color:var(--muted);margin-bottom:6px}
-.glossary-card .short{font-size:14px;color:var(--muted)}
-.glossary-card .g-details{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px;white-space:pre-line}
-.glossary-card.open .g-details{display:block}
-.card-actions{display:flex;gap:8px;margin-top:12px}
-.term-modal-short{font-size:15px;font-weight:500;margin-bottom:10px}
-.term-modal-details{font-size:14px;color:var(--muted);white-space:pre-line;padding-top:10px;border-top:1px dashed var(--border)}
+/* Отзывы */
+.review-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:8px}
+.review-source{font-size:11.5px;color:var(--muted);margin-bottom:4px;font-style:italic}
+.review-text{font-size:14px;line-height:1.45;margin-bottom:8px}
+.review-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.review-badge{font-size:12px;padding:3px 8px;border-radius:8px;font-weight:600}
+.review-badge.pro{background:var(--good-bg);color:var(--good)}
+.review-badge.con{background:var(--bad-bg);color:var(--bad)}
+.review-badge.defect{background:#fef3c7;color:#92400e}
+[data-theme="dark"] .review-badge.defect{background:#3b2a05;color:#fbbf24}
+
+/* Кликабельные ссылки на термины внутри карточки товара */
+.term-link{color:var(--accent);font-weight:700;border-bottom:1.5px dashed var(--accent);cursor:pointer;padding:0 2px;border-radius:4px;transition:background .15s}
+.term-link:active{background:var(--accent-soft)}
+.term-link::after{content:" ℹ️";font-size:11px;vertical-align:super}
 </style>
 </head>
 <body>
@@ -138,7 +174,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
     </div>
   </header>
 
-  <!-- ГЛАВНАЯ: плитки категорий -->
   <div id="homeView">
     <div class="view-actions">
       <button class="btn small" id="addCatBtn" style="display:none">+ Категория</button>
@@ -146,42 +181,74 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
     <div id="catsGrid"></div>
   </div>
 
-  <!-- ЭКРАН КАТЕГОРИИ -->
   <div id="categoryView">
-    <button class="back-btn" id="backBtn">← Назад</button>
-    <div class="cat-title" id="catTitle"></div>
-
-    <div class="view-actions">
-      <button class="btn small" id="addProductBtn" style="display:none">+ Товар</button>
+    <button class="back-btn" id="backBtn">← Назад к категориям</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+      <div class="cat-title" id="catTitle"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn secondary small" id="exportBtn" style="display:none">📤 Экспорт</button>
+        <button class="btn secondary small" id="importBtn" style="display:none">📥 Импорт</button>
+        <button class="btn small" id="addProductBtn" style="display:none">+ Товар</button>
+      </div>
     </div>
 
-    <input type="search" id="prodSearch" class="search-input" placeholder="Поиск по названию или бренду..." autocomplete="off">
-
-    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-      <button class="btn secondary small" id="sortPriceAsc">Цена ↑</button>
-      <button class="btn secondary small" id="sortPriceDesc">Цена ↓</button>
+    <div class="filters-panel">
+      <input type="search" class="search-input" id="prodSearch" placeholder="Поиск по названию или описанию..." autocomplete="off">
+      <div class="brand-chips" id="brandFilters"></div>
+      <div class="price-controls">
+        <button class="btn secondary small" id="sortPriceAsc">Цена ↑</button>
+        <button class="btn secondary small" id="sortPriceDesc">Цена ↓</button>
+        <div class="price-range">
+          <span>Цена (тыс.):</span>
+          <input type="number" id="priceMin" placeholder="От" min="0" step="1">
+          <span>—</span>
+          <input type="number" id="priceMax" placeholder="До" min="0" step="1">
+        </div>
+      </div>
     </div>
 
     <div id="productsList" style="margin-top:12px"></div>
   </div>
 
-  <!-- СПРАВОЧНИК -->
   <div id="glossaryView">
-    <div class="view-actions">
-      <button class="btn small" id="addGlossaryBtn" style="display:none">+ Термин</button>
-      <button class="btn secondary small" id="importGlossaryBtn" style="display:none">📥 Импорт</button>
-      <button class="btn secondary small" id="exportGlossaryBtn" style="display:none">📤 Экспорт</button>
+    <!-- ЭКРАН 1: Виды техники -->
+    <div id="gStepSections">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <div class="cat-title" style="margin:0">Справочник: виды техники</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn secondary small" id="gExportBtn" style="display:none">📤 Экспорт</button>
+          <button class="btn secondary small" id="gImportBtn" style="display:none">📥 Импорт</button>
+          <button class="btn small" id="addGSecBtn" style="display:none">+ Раздел</button>
+        </div>
+      </div>
+      <div class="rect-list" id="gSectionsList"></div>
     </div>
-    <input type="search" id="glossarySearch" class="search-input" placeholder="Поиск термина, синонима или описания..." autocomplete="off">
-    <div class="filters-row">
-      <select class="filter-select" id="glossaryCatFilter">
-        <option value="all">Все категории товаров</option>
-      </select>
-      <select class="filter-select" id="glossaryBrandFilter">
-        <option value="all">Все бренды</option>
-      </select>
+
+    <!-- ЭКРАН 2: Бренды выбранного вида техники -->
+    <div id="gStepBrands" style="display:none">
+      <button class="back-btn" id="gBackToSections">← Назад к видам техники</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div class="cat-title" id="gSecTitle"></div>
+        <button class="btn small" id="addGBrandBtn" style="display:none">+ Бренд</button>
+      </div>
+      <div class="rect-list" id="gBrandsList"></div>
     </div>
-    <div id="glossaryList" style="margin-top:12px"></div>
+
+    <!-- ЭКРАН 3: Термины выбранного бренда -->
+    <div id="gStepTerms" style="display:none">
+      <button class="back-btn" id="gBackToBrands">← Назад к брендам</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div class="cat-title" id="gBrandTitle"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn secondary small" id="gImportTermsBtn" style="display:none">📥 Импорт</button>
+          <button class="btn small" id="addTermBtn" style="display:none">+ Термин</button>
+        </div>
+      </div>
+      <div class="filters-panel">
+        <input type="search" class="search-input" id="termSearch" placeholder="Поиск по терминам и особенностям..." autocomplete="off">
+      </div>
+      <div id="termsList" style="margin-top:12px"></div>
+    </div>
   </div>
 </div>
 
@@ -228,29 +295,48 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   <div class="dlg-box">
     <h3 id="prodDlgTitle">Новый товар</h3>
     <div class="field">
-      <label>Ссылка на фото (ImgBB)</label>
+      <label>Прямая ссылка на квадратное фото (ImgBB)</label>
       <input type="text" id="pImage" placeholder="https://i.ibb.co/...">
     </div>
     <div class="field">
-      <label>Название</label>
-      <input type="text" id="pName" placeholder="LG OLED C4 55&quot;">
+      <label>Название модели</label>
+      <input type="text" id="pName" placeholder="Samsung QLED Q60D 55&quot;">
     </div>
     <div class="field">
       <label>Бренд</label>
-      <input type="text" id="pBrand" list="brandsList" placeholder="LG">
+      <input type="text" id="pBrand" placeholder="Samsung">
     </div>
     <div class="field">
-      <label>Цена (необязательно)</label>
+      <label>Цена в рублях (необязательно)</label>
       <input type="number" id="pPrice" placeholder="49990">
     </div>
     <div class="field">
       <label>Краткое описание</label>
-      <textarea id="pShort" placeholder="4K OLED, 120 Гц, Game Mode"></textarea>
+      <textarea id="pShort" rows="2" placeholder="4K QLED, 55&quot;, Tizen OS"></textarea>
     </div>
     <div class="field">
-      <label>Характеристики (каждая с новой строки: Группа | Ключ | Значение)</label>
-      <textarea id="pSpecs" style="min-height:120px" placeholder="Экран | Тип матрицы | OLED&#10;Игры | Режим | Game Mode&#10;Звук | Мощность | 40 Вт"></textarea>
-      <div class="hint" style="font-size:12.5px;color:var(--muted);margin-top:4px">Пример: <code>Экран | Тип матрицы | OLED</code></div>
+      <label>Характеристики (Группа | Ключ | Значение)</label>
+      <textarea id="pSpecs" rows="4" placeholder="Экран | Диагональ | 55&quot;&#10;Экран | Тип матрицы | QLED"></textarea>
+    </div>
+    <div class="field">
+      <label>Особенности и фишки (каждая с новой строки)</label>
+      <textarea id="pFeatures" rows="3" placeholder="Технология Quantum Dot&#10;Пульт SolarCell без батареек"></textarea>
+    </div>
+    <div class="field">
+      <label>Плюсы (каждый с новой строки)</label>
+      <textarea id="pPros" rows="2" placeholder="Яркая картинка&#10;Удобный Smart TV"></textarea>
+    </div>
+    <div class="field">
+      <label>Минусы (каждый с новой строки)</label>
+      <textarea id="pCons" rows="2" placeholder="Частота обновления 60 Гц"></textarea>
+    </div>
+    <div class="field">
+      <label>Характеристики ИИ (Группа | Ключ | Значение)</label>
+      <textarea id="pAiSpecs" rows="4" placeholder="Общее | Что это | Подробный разбор от ИИ&#10;Экран | Матрица | QLED с квантовыми точками"></textarea>
+    </div>
+    <div class="field">
+      <label>Отзывы (Источник || Текст || Плюсы через ; || Минусы через ; || Брак через ;)</label>
+      <textarea id="pReviews" rows="4" placeholder="Яндекс.Маркет || Яркий экран, но слабый звук || Яркий экран; Удобный Smart TV || Слабый звук || У одного был битый пиксель"></textarea>
     </div>
     <div class="dlg-actions">
       <button class="btn secondary" id="prodCancel">Отмена</button>
@@ -259,117 +345,182 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Диалог добавления/редактирования термина -->
-<div class="dlg" id="glossaryDlg">
+<!-- Диалог раздела справочника -->
+<div class="dlg" id="gSecDlg">
   <div class="dlg-box">
-    <h3 id="gDlgTitle">Новый термин</h3>
+    <h3>Новый вид техники</h3>
     <div class="field">
-      <label>Термин (как в характеристиках)</label>
-      <input type="text" id="gTitle" placeholder="OLED">
+      <label>Название</label>
+      <input type="text" id="gsName" placeholder="Телевизоры">
     </div>
     <div class="field">
-      <label>Синонимы / варианты написания (через запятую)</label>
-      <input type="text" id="gAliases" placeholder="OLED evo, Self-lit OLED">
-    </div>
-    <div class="field">
-      <label>Категория товара</label>
-      <select id="gCatId">
-        <option value="">Общее (для всех категорий)</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Бренд (пусто = общий для любого бренда)</label>
-      <input type="text" id="gBrand" list="brandsList" placeholder="LG или Samsung">
-    </div>
-    <div class="field">
-      <label>Кратко простыми словами (для клиента)</label>
-      <textarea id="gShort" placeholder="Матрица на органических светодиодах с бесконечной контрастностью и идеальным чёрным цветом."></textarea>
-    </div>
-    <div class="field">
-      <label>Подробности / фишки бренда</label>
-      <textarea id="gDetails" style="min-height:110px" placeholder="У LG используются самоподсвечивающиеся пиксели (WRGB)..."></textarea>
+      <label>Иконка (эмодзи)</label>
+      <input type="text" id="gsIcon" placeholder="📺" maxlength="4">
     </div>
     <div class="dlg-actions">
-      <button class="btn secondary" id="gCancel">Отмена</button>
-      <button class="btn" id="gSave">Сохранить</button>
+      <button class="btn secondary" id="gsCancel">Отмена</button>
+      <button class="btn" id="gsSave">Сохранить</button>
     </div>
   </div>
 </div>
 
-<!-- Диалог импорта JSON -->
+<!-- Диалог бренда справочника -->
+<div class="dlg" id="gBrandDlg">
+  <div class="dlg-box">
+    <h3>Новый бренд в разделе</h3>
+    <div class="field">
+      <label>Название бренда</label>
+      <input type="text" id="gbName" placeholder="Samsung">
+    </div>
+    <div class="field">
+      <label>Иконка бренда (эмодзи или символ)</label>
+      <input type="text" id="gbIcon" placeholder="🔷" maxlength="4">
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="gbCancel">Отмена</button>
+      <button class="btn" id="gbSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Диалог термина / особенности -->
+<div class="dlg" id="termDlg">
+  <div class="dlg-box">
+    <h3 id="termDlgTitle">Новый термин</h3>
+    <div class="field">
+      <label>Бренд</label>
+      <select id="tBrandSelect"></select>
+    </div>
+    <div class="field">
+      <label>Название термина / технологии</label>
+      <input type="text" id="tTitle" placeholder="Q-Symphony или Neo QLED">
+    </div>
+    <div class="field">
+      <label>Кратко (суть для покупателя)</label>
+      <textarea id="tShort" rows="2" placeholder="Синхронная работа динамиков ТВ и саундбара."></textarea>
+    </div>
+    <div class="field">
+      <label>Подробности и особенности (необязательно)</label>
+      <textarea id="tDetails" rows="4" placeholder="Работает по HDMI eARC или Wi-Fi..."></textarea>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="termCancel">Отмена</button>
+      <button class="btn" id="termSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно быстрой подсказки по термину из карточки товара -->
+<div class="dlg" id="quickTermDlg">
+  <div class="dlg-box">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
+      <h3 id="qtTitle" style="margin:0"></h3>
+      <span class="term-tag" id="qtBadge"></span>
+    </div>
+    <div id="qtShort" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.45"></div>
+    <div id="qtDetails" style="font-size:14px;color:var(--muted);line-height:1.5;white-space:pre-line;padding-top:10px;border-top:1px dashed var(--border)"></div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="qtClose">Закрыть</button>
+      <button class="btn" id="qtGoGlossary">В справочник</button>
+    </div>
+  </div>
+</div>
+
+<!-- Экспорт товаров -->
+<div class="dlg" id="exportDlg">
+  <div class="dlg-box">
+    <h3>Экспорт товаров</h3>
+    <div id="exportInfo" style="font-size:14px;color:var(--muted);margin-bottom:12px"></div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:6px">
+      Будет скачан JSON-файл с товарами <b>только этой категории</b>. Его можно отдать помощнику и загрузить обратно через «Импорт».
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="exportCancel">Отмена</button>
+      <button class="btn" id="exportDo">Скачать файл</button>
+    </div>
+  </div>
+</div>
+
+<!-- Импорт товаров -->
 <div class="dlg" id="importDlg">
   <div class="dlg-box">
-    <h3>Импорт терминов из JSON</h3>
+    <h3>Импорт товаров</h3>
+    <div id="importCatInfo" style="font-size:14px;font-weight:600;margin-bottom:10px"></div>
+    <div class="field">
+      <label>Файл (.json)</label>
+      <input type="file" id="importFile" accept=".json,application/json">
+    </div>
+    <div id="importPreview" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:6px">
+      ⚠️ Все товары из файла будут привязаны к <b>текущей категории</b>. Товары с одинаковым <b>названием + брендом</b> будут <b>заменены</b>, а не задвоены. Новые категории не создаются.
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="importCancel">Отмена</button>
+      <button class="btn" id="importDo" disabled>Импортировать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Экспорт справочника (JSON) -->
+<div class="dlg" id="gExportDlg">
+  <div class="dlg-box">
+    <h3>Экспорт справочника (JSON)</h3>
+    <div id="gExportInfo" style="font-size:14px;color:var(--muted);margin-bottom:10px"></div>
+    <div class="field">
+      <label>Готовый JSON</label>
+      <textarea id="gExportJson" class="mono" readonly></textarea>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="gExportCopy">📋 Скопировать</button>
+      <button class="btn" id="gExportDownload">💾 Скачать .json</button>
+    </div>
+    <div class="dlg-actions" style="margin-top:8px">
+      <button class="btn secondary" id="gExportClose">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Импорт справочника (JSON) -->
+<div class="dlg" id="gImportDlg">
+  <div class="dlg-box">
+    <h3>Импорт терминов в справочник</h3>
     <div style="margin-bottom:12px">
-      <button type="button" class="btn secondary small" id="copyAiPromptBtn" style="width:100%">🤖 Скопировать промпт-инструкцию для ИИ</button>
+      <button type="button" class="btn secondary small" id="gCopyPromptBtn" style="width:100%">🤖 Скопировать промпт-инструкцию для ИИ</button>
     </div>
     <div class="field">
       <label>Загрузить .json файл (необязательно)</label>
-      <input type="file" id="importFile" accept=".json,application/json">
+      <input type="file" id="gImportFile" accept=".json,application/json">
     </div>
     <div class="field">
-      <label>Категория по умолчанию (если не указана в JSON)</label>
-      <select id="importDefaultCat">
-        <option value="">Общее (если не указано в JSON)</option>
+      <label>Раздел по умолчанию (если не указан в JSON)</label>
+      <select id="gImpDefSection">
+        <option value="">Создать / использовать «Общее»</option>
       </select>
     </div>
     <div class="field">
       <label>Бренд по умолчанию (если не указан в JSON)</label>
-      <input type="text" id="importDefaultBrand" list="brandsList" placeholder="Например: LG (можно оставить пустым)">
+      <input type="text" id="gImpDefBrand" placeholder="Например: LG (или пусто для общих терминов)">
     </div>
     <label class="check-row">
-      <input type="checkbox" id="importUpdateExisting" checked>
+      <input type="checkbox" id="gImpUpdate" checked>
       <span>Обновлять совпадающие термины (без дубликатов)</span>
     </label>
     <div class="field">
-      <label>Вставьте JSON сюда</label>
-      <textarea id="importJson" class="mono" placeholder='[&#10;  {&#10;    "title": "OLED",&#10;    "aliases": "OLED evo",&#10;    "category": "Телевизоры",&#10;    "brand": "LG",&#10;    "shortDesc": "Кратко для клиента...",&#10;    "details": "Подробно..."&#10;  }&#10;]'></textarea>
+      <label>Вставьте JSON от ИИ сюда</label>
+      <textarea id="gImportJson" class="mono" placeholder='[&#10;  {&#10;    "section": "Телевизоры",&#10;    "brand": "LG",&#10;    "title": "OLED",&#10;    "short": "Кратко для покупателя...",&#10;    "details": "Подробно про технологию..."&#10;  }&#10;]'></textarea>
+    </div>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:6px">
+      💡 Если раздела или бренда из JSON ещё нет в справочнике — они создадутся автоматически.
     </div>
     <div class="dlg-actions">
-      <button class="btn secondary" id="importCancel">Отмена</button>
-      <button class="btn" id="importRun">Импортировать</button>
+      <button class="btn secondary" id="gImportCancel">Отмена</button>
+      <button class="btn" id="gImportRun">Импортировать</button>
     </div>
   </div>
 </div>
 
-<!-- Диалог экспорта JSON -->
-<div class="dlg" id="exportDlg">
-  <div class="dlg-box">
-    <h3>Экспорт справочника (JSON)</h3>
-    <div class="field">
-      <label>Все термины (<span id="exportCount">0</span>)</label>
-      <textarea id="exportJson" class="mono" readonly></textarea>
-    </div>
-    <div class="dlg-actions">
-      <button class="btn secondary" id="exportCopy">📋 Скопировать</button>
-      <button class="btn" id="exportDownload">💾 Скачать .json</button>
-    </div>
-    <div class="dlg-actions" style="margin-top:8px">
-      <button class="btn secondary" id="exportClose">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<!-- Окно просмотра термина при клике на характеристику -->
-<div class="dlg" id="termViewDlg">
-  <div class="dlg-box">
-    <h3 id="tvTitle"></h3>
-    <div class="badges-row" id="tvBadges"></div>
-    <div class="term-modal-short" id="tvShort"></div>
-    <div class="term-modal-details" id="tvDetails"></div>
-    <div class="dlg-actions">
-      <button class="btn" id="tvClose">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<datalist id="brandsList"></datalist>
 <div id="toasts"></div>
-
 <script type="module">
-// ============================================
-// 1. FIREBASE CONFIG
-// ============================================
 const firebaseConfig = {
   apiKey: "AIzaSyDEHif3aB05Q7afZYdx4AE66qNH4ObnhhY",
   authDomain: "pomoshnik-prodavca.firebaseapp.com",
@@ -381,9 +532,6 @@ const firebaseConfig = {
 };
 const ADMIN_UID = "j3qe8ZSSYzb6cR3mZ6BfvPX8yrB2";
 
-// ============================================
-// 2. ИМПОРТЫ
-// ============================================
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js';
 import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, writeBatch, query, where, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js';
@@ -393,34 +541,31 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 enableIndexedDbPersistence(db).catch(()=>{});
 
-// ============================================
-// 3. СОСТОЯНИЕ
-// ============================================
 let categories = [];
 let currentCat = null;
 let isAdmin = false;
-let glossary = [];
-let products = [];
 
-// ============================================
-// 4. УТИЛИТЫ
-// ============================================
+let products = [];
+let prodQuery = '';
+let selectedBrand = '';
+let priceMinK = null;
+let priceMaxK = null;
+let prodSort = null;
+let editingProductId = null;
+
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function toast(msg){
+function toast(msg, isErr){
   const box = document.getElementById('toasts');
   const el = document.createElement('div');
   el.className = 'toast';
+  if(isErr) el.style.background = '#dc2626';
   el.textContent = msg;
   box.appendChild(el);
   requestAnimationFrame(()=>el.classList.add('show'));
-  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(), 250); }, 2500);
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(), 250); }, 2800);
 }
 function genId(prefix='c'){ return prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
-function getCatLabel(catId){
-  if(!catId) return 'Общее';
-  const c = categories.find(x=>x.id===catId);
-  return c ? `${c.emoji} ${c.name}` : 'Категория';
-}
+function parseLines(text){ return text.split('\n').map(l=>l.trim()).filter(Boolean); }
 async function copyText(text, okMsg='Скопировано'){
   try{
     await navigator.clipboard.writeText(text);
@@ -431,817 +576,9 @@ async function copyText(text, okMsg='Скопировано'){
   }
 }
 
-function updateBrandsDatalist(){
-  const brands = new Set();
-  glossary.forEach(g=>{ if(g.brand.trim()) brands.add(g.brand.trim()); });
-  products.forEach(p=>{ if(p.brand.trim()) brands.add(p.brand.trim()); });
-  const list = [...brands].sort((a,b)=>a.localeCompare(b, 'ru'));
-  document.getElementById('brandsList').innerHTML = list.map(b=>`<option value="${esc(b)}">`).join('');
-}
-
-// ============================================
-// 5. МАТЧИНГ ТЕРМИНОВ ПО КАТЕГОРИИ И БРЕНДУ
-// ============================================
-function isWordBoundaryChar(ch){
-  if(!ch) return true;
-  return !/[\p{L}\p{N}]/u.test(ch);
-}
-
-function buildTermMatcher(productBrand, productCatId){
-  const bNorm = (productBrand || '').trim().toLowerCase();
-  const cId = productCatId || '';
-  const bestByPhrase = new Map();
-
-  glossary.forEach(term=>{
-    const tBrand = (term.brand || '').trim().toLowerCase();
-    const tCat = term.categoryId || '';
-
-    if(tBrand && tBrand !== bNorm) return;
-    if(tCat && tCat !== cId) return;
-
-    let priority = 1;
-    if(tBrand && tCat) priority = 4;
-    else if(tBrand && !tCat) priority = 3;
-    else if(!tBrand && tCat) priority = 2;
-
-    const phrases = [term.title, ...(term.aliases ? term.aliases.split(',') : [])]
-      .map(s=>s.trim())
-      .filter(Boolean);
-
-    phrases.forEach(rawPhrase=>{
-      const key = rawPhrase.toLowerCase();
-      const prev = bestByPhrase.get(key);
-      if(!prev || priority > prev.priority){
-        bestByPhrase.set(key, { phraseLower: key, term, priority });
-      }
-    });
-  });
-
-  return [...bestByPhrase.values()].sort((a,b)=>b.phraseLower.length - a.phraseLower.length);
-}
-
-function linkifyText(text, matcher){
-  const str = String(text ?? '');
-  if(!str || !matcher.length) return esc(str);
-
-  const lower = str.toLowerCase();
-  let out = '';
-  let plainStart = 0;
-  let pos = 0;
-
-  while(pos < str.length){
-    let matched = null;
-    for(const item of matcher){
-      const len = item.phraseLower.length;
-      if(lower.startsWith(item.phraseLower, pos)){
-        const beforeOk = isWordBoundaryChar(pos === 0 ? '' : str[pos - 1]);
-        const afterOk = isWordBoundaryChar(pos + len >= str.length ? '' : str[pos + len]);
-        if(beforeOk && afterOk){
-          matched = item;
-          break;
-        }
-      }
-    }
-
-    if(matched){
-      if(pos > plainStart) out += esc(str.slice(plainStart, pos));
-      const matchedText = str.slice(pos, pos + matched.phraseLower.length);
-      out += `<button type="button" class="term-link" data-tid="${esc(matched.term.id)}">${esc(matchedText)}</button>`;
-      pos += matched.phraseLower.length;
-      plainStart = pos;
-    }else{
-      pos++;
-    }
-  }
-
-  if(plainStart < str.length) out += esc(str.slice(plainStart));
-  return out;
-}
-
-function openTermModal(termId){
-  const term = glossary.find(g=>g.id === termId);
-  if(!term) return;
-  document.getElementById('tvTitle').textContent = term.title;
-  const badges = [];
-  badges.push(`<span class="badge brand-badge">${term.brand ? esc(term.brand) : 'Общий термин'}</span>`);
-  badges.push(`<span class="badge">${esc(getCatLabel(term.categoryId))}</span>`);
-  document.getElementById('tvBadges').innerHTML = badges.join('');
-
-  const shortEl = document.getElementById('tvShort');
-  shortEl.textContent = term.shortDesc || '';
-  shortEl.style.display = term.shortDesc ? '' : 'none';
-
-  const detEl = document.getElementById('tvDetails');
-  detEl.textContent = term.details || '';
-  detEl.style.display = term.details ? '' : 'none';
-
-  document.getElementById('termViewDlg').classList.add('show');
-}
-document.getElementById('tvClose').onclick = ()=>document.getElementById('termViewDlg').classList.remove('show');
-document.getElementById('termViewDlg').addEventListener('click', e=>{
-  if(e.target.id === 'termViewDlg') e.target.classList.remove('show');
-});
-
-// ============================================
-// 6. ТОВАРЫ
-// ============================================
-let prodQuery = '';
-let prodSort = null;
-
-function updateSortButtons(){
-  document.getElementById('sortPriceAsc').classList.toggle('active-sort', prodSort === 'asc');
-  document.getElementById('sortPriceDesc').classList.toggle('active-sort', prodSort === 'desc');
-}
-
-async function loadProducts(catId){
-  try{
-    const q = query(collection(db, 'products'), where('categoryId', '==', catId));
-    const snapshot = await getDocs(q);
-    products = [];
-    snapshot.forEach(d=>{
-      const x = d.data();
-      products.push({
-        id: d.id,
-        categoryId: x.categoryId || catId,
-        name: x.name||'',
-        brand: x.brand||'',
-        price: x.price ?? null,
-        imageUrl: x.imageUrl||'',
-        shortDesc: x.shortDesc||'',
-        specs: Array.isArray(x.specs) ? x.specs : []
-      });
-    });
-    updateBrandsDatalist();
-    renderProducts();
-  }catch(e){
-    console.error(e);
-    toast('Ошибка загрузки товаров');
-  }
-}
-
 function parseSpecs(text){
-  return text.split('\n').map(l=>l.trim()).filter(Boolean).map(line=>{
+  return parseLines(text).map(line=>{
     const parts = line.split('|').map(s=>s.trim());
     if(parts.length >= 3) return { group: parts[0], key: parts[1], value: parts.slice(2).join(' ') };
     if(parts.length === 2) return { group: 'Общее', key: parts[0], value: parts[1] };
-    return { group: 'Общее', key: parts[0], value: '' };
-  });
-}
-
-function renderProducts(){
-  const box = document.getElementById('productsList');
-  let list = products.slice();
-  if(prodQuery){
-    const q = prodQuery.toLowerCase();
-    list = list.filter(p=>
-      p.name.toLowerCase().includes(q) ||
-      p.brand.toLowerCase().includes(q)
-    );
-  }
-  if(prodSort === 'asc') list.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity));
-  if(prodSort === 'desc') list.sort((a,b)=>(b.price??-Infinity)-(a.price??-Infinity));
-
-  if(!list.length){
-    box.innerHTML = `<div class="empty">${prodQuery ? 'Ничего не найдено.' : 'Товаров пока нет.' + (isAdmin ? ' Нажмите «+ Товар».' : '')}</div>`;
-    return;
-  }
-
-  box.innerHTML = list.map(p=>{
-    const matcher = buildTermMatcher(p.brand, p.categoryId || currentCat?.id);
-    const groups = {};
-    (p.specs||[]).forEach(s=>{
-      if(!groups[s.group]) groups[s.group] = [];
-      groups[s.group].push(s);
-    });
-    return `
-      <div class="product-card" data-pid="${esc(p.id)}">
-        ${p.imageUrl ? `<img class="img" src="${esc(p.imageUrl)}" alt="${esc(p.name)}" loading="lazy">` : `<div class="placeholder">📦</div>`}
-        <div class="body">
-          <h3>${esc(p.name)}</h3>
-          ${p.brand ? `<div class="brand">${esc(p.brand)}</div>` : ''}
-          ${p.price!=null ? `<div class="price">${p.price.toLocaleString('ru-RU')} ₽</div>` : `<div class="price">Цена по запросу</div>`}
-          ${p.shortDesc ? `<div class="short">${linkifyText(p.shortDesc, matcher)}</div>` : ''}
-        </div>
-        <div class="details">
-          ${Object.keys(groups).map(g=>`
-            <div class="spec-group">
-              <h4>${esc(g)}</h4>
-              ${groups[g].map(s=>`<div class="spec-row"><span>${linkifyText(s.key, matcher)}</span><span>${linkifyText(s.value, matcher)}</span></div>`).join('')}
-            </div>
-          `).join('')}
-        </div>
-      </div>`;
-  }).join('');
-}
-
-document.getElementById('productsList').addEventListener('click', e=>{
-  const termBtn = e.target.closest('.term-link');
-  if(termBtn){
-    e.stopPropagation();
-    openTermModal(termBtn.dataset.tid);
-    return;
-  }
-  const card = e.target.closest('.product-card'); if(!card) return;
-  card.classList.toggle('open');
-});
-
-let prodTimer = null;
-document.getElementById('prodSearch').addEventListener('input', e=>{
-  const v = e.target.value.trim();
-  clearTimeout(prodTimer);
-  prodTimer = setTimeout(()=>{ prodQuery = v; renderProducts(); }, 150);
-});
-
-document.getElementById('sortPriceAsc').onclick = ()=>{
-  prodSort = prodSort === 'asc' ? null : 'asc';
-  updateSortButtons();
-  renderProducts();
-};
-document.getElementById('sortPriceDesc').onclick = ()=>{
-  prodSort = prodSort === 'desc' ? null : 'desc';
-  updateSortButtons();
-  renderProducts();
-};
-
-document.getElementById('addProductBtn').onclick = ()=>{
-  document.getElementById('prodDlgTitle').textContent = 'Новый товар';
-  ['pImage','pName','pBrand','pPrice','pShort','pSpecs'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('prodDlg').classList.add('show');
-};
-document.getElementById('prodCancel').onclick = ()=>document.getElementById('prodDlg').classList.remove('show');
-document.getElementById('prodSave').onclick = async ()=>{
-  if(!isAdmin){ toast('Только администратор'); return; }
-  if(!currentCat){ toast('Сначала выберите категорию'); return; }
-  const name = document.getElementById('pName').value.trim();
-  if(!name){ toast('Введите название'); return; }
-  const priceRaw = document.getElementById('pPrice').value.trim();
-  const data = {
-    categoryId: currentCat.id,
-    name,
-    brand: document.getElementById('pBrand').value.trim(),
-    price: priceRaw === '' ? null : Number(priceRaw),
-    imageUrl: document.getElementById('pImage').value.trim(),
-    shortDesc: document.getElementById('pShort').value.trim(),
-    specs: parseSpecs(document.getElementById('pSpecs').value)
-  };
-  try{
-    await setDoc(doc(db, 'products', genId('p')), data);
-    document.getElementById('prodDlg').classList.remove('show');
-    toast('Товар добавлен');
-    await loadProducts(currentCat.id);
-  }catch(e){
-    console.error(e);
-    toast('Ошибка сохранения товара');
-  }
-};
-
-// ============================================
-// 7. КАТЕГОРИИ ИЗ FIRESTORE
-// ============================================
-function populateCategorySelects(){
-  const catOptions = categories.map(c=>`<option value="${esc(c.id)}">${esc(c.emoji)} ${esc(c.name)}</option>`).join('');
-
-  const dlgSel = document.getElementById('gCatId');
-  const prevDlg = dlgSel.value;
-  dlgSel.innerHTML = `<option value="">Общее (для всех категорий)</option>` + catOptions;
-  dlgSel.value = prevDlg;
-
-  const impSel = document.getElementById('importDefaultCat');
-  const prevImp = impSel.value;
-  impSel.innerHTML = `<option value="">Общее (если не указано в JSON)</option>` + catOptions;
-  impSel.value = [...impSel.options].some(o=>o.value===prevImp) ? prevImp : '';
-
-  const filterSel = document.getElementById('glossaryCatFilter');
-  const prevFilter = filterSel.value || 'all';
-  filterSel.innerHTML = `<option value="all">Все категории товаров</option><option value="">Общее (без категории)</option>` + catOptions;
-  filterSel.value = [...filterSel.options].some(o=>o.value===prevFilter) ? prevFilter : 'all';
-}
-
-async function loadCategories(){
-  try{
-    const snapshot = await getDocs(collection(db, 'categories'));
-    categories = [];
-    snapshot.forEach(d=>{
-      const x = d.data();
-      categories.push({ id:d.id, name:x.name||'', emoji:x.emoji||'📦', order:x.order||0 });
-    });
-    categories.sort((a,b)=>(a.order||0)-(b.order||0));
-    populateCategorySelects();
-    renderCats();
-    renderGlossary();
-  }catch(e){
-    console.error(e);
-    toast('Ошибка загрузки категорий');
-  }
-}
-
-async function saveCategory(data){
-  if(!isAdmin){ toast('Только администратор'); return; }
-  try{
-    await setDoc(doc(db, 'categories', genId('c')), { ...data, order: categories.length });
-    await loadCategories();
-    toast('Категория добавлена');
-  }catch(e){
-    console.error(e);
-    toast('Ошибка сохранения');
-  }
-}
-
-function renderCats(){
-  const grid = document.getElementById('catsGrid');
-  if(!categories.length){
-    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">Категорий пока нет.${isAdmin?' Нажмите «+ Категория».':''}</div>`;
-    return;
-  }
-  grid.innerHTML = categories.map(c=>`
-    <div class="cat-tile" data-cat="${esc(c.id)}">
-      <div class="emoji">${esc(c.emoji)}</div>
-      <div class="name">${esc(c.name)}</div>
-    </div>
-  `).join('');
-}
-
-// ============================================
-// 8. СПРАВОЧНИК + ИМПОРТ / ЭКСПОРТ
-// ============================================
-let glossaryQuery = '';
-let glossaryCatFilter = 'all';
-let glossaryBrandFilter = 'all';
-let editingGlossaryId = null;
-
-async function loadGlossary(){
-  try{
-    const snapshot = await getDocs(collection(db, 'glossary'));
-    glossary = [];
-    snapshot.forEach(d=>{
-      const x = d.data();
-      glossary.push({
-        id: d.id,
-        title: x.title || '',
-        aliases: x.aliases || '',
-        categoryId: x.categoryId || '',
-        brand: x.brand || '',
-        shortDesc: x.shortDesc || '',
-        details: x.details || ''
-      });
-    });
-    glossary.sort((a,b)=>a.title.localeCompare(b.title, 'ru'));
-    updateBrandsDatalist();
-    populateGlossaryBrandFilter();
-    renderGlossary();
-    if(currentCat) renderProducts();
-  }catch(e){
-    console.error(e);
-    toast('Ошибка загрузки справочника');
-  }
-}
-
-function populateGlossaryBrandFilter(){
-  const sel = document.getElementById('glossaryBrandFilter');
-  const prev = sel.value || 'all';
-  const brands = [...new Set(glossary.map(g=>g.brand.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b, 'ru'));
-  sel.innerHTML = `<option value="all">Все бренды</option><option value="">Общие (без бренда)</option>` +
-    brands.map(b=>`<option value="${esc(b.toLowerCase())}">${esc(b)}</option>`).join('');
-  sel.value = [...sel.options].some(o=>o.value===prev) ? prev : 'all';
-  glossaryBrandFilter = sel.value;
-}
-
-function renderGlossary(){
-  const box = document.getElementById('glossaryList');
-  let list = glossary.slice();
-
-  if(glossaryCatFilter !== 'all'){
-    list = list.filter(g=>(g.categoryId || '') === glossaryCatFilter);
-  }
-  if(glossaryBrandFilter !== 'all'){
-    list = list.filter(g=>(g.brand || '').trim().toLowerCase() === glossaryBrandFilter);
-  }
-  if(glossaryQuery){
-    const q = glossaryQuery.toLowerCase();
-    list = list.filter(g=>
-      g.title.toLowerCase().includes(q) ||
-      g.aliases.toLowerCase().includes(q) ||
-      g.brand.toLowerCase().includes(q) ||
-      g.shortDesc.toLowerCase().includes(q) ||
-      g.details.toLowerCase().includes(q)
-    );
-  }
-
-  if(!list.length){
-    box.innerHTML = `<div class="empty">${glossaryQuery || glossaryCatFilter!=='all' || glossaryBrandFilter!=='all' ? 'Ничего не найдено.' : 'В справочнике пока пусто.' + (isAdmin ? ' Нажмите «+ Термин» или «📥 Импорт».' : '')}</div>`;
-    return;
-  }
-
-  box.innerHTML = list.map(g=>`
-    <div class="glossary-card" data-gid="${esc(g.id)}">
-      <div class="badges-row">
-        <span class="badge brand-badge">${g.brand ? esc(g.brand) : 'Общий'}</span>
-        <span class="badge">${esc(getCatLabel(g.categoryId))}</span>
-      </div>
-      <div class="g-head">
-        <h3>${esc(g.title)}</h3>
-      </div>
-      ${g.aliases ? `<div class="aliases">Также: ${esc(g.aliases)}</div>` : ''}
-      ${g.shortDesc ? `<div class="short">${esc(g.shortDesc)}</div>` : ''}
-      ${(g.details || isAdmin) ? `
-        <div class="g-details">
-          ${g.details ? `<div>${esc(g.details)}</div>` : '<div style="color:var(--muted)">Нет дополнительного описания</div>'}
-          ${isAdmin ? `
-            <div class="card-actions">
-              <button class="btn secondary small" data-gedit="${esc(g.id)}">✏️ Изменить</button>
-              <button class="btn danger small" data-gdel="${esc(g.id)}">🗑️ Удалить</button>
-            </div>
-          ` : ''}
-        </div>
-      ` : ''}
-    </div>
-  `).join('');
-}
-
-document.getElementById('glossaryCatFilter').addEventListener('change', e=>{
-  glossaryCatFilter = e.target.value;
-  renderGlossary();
-});
-document.getElementById('glossaryBrandFilter').addEventListener('change', e=>{
-  glossaryBrandFilter = e.target.value;
-  renderGlossary();
-});
-
-let gTimer = null;
-document.getElementById('glossarySearch').addEventListener('input', e=>{
-  const v = e.target.value.trim();
-  clearTimeout(gTimer);
-  gTimer = setTimeout(()=>{ glossaryQuery = v; renderGlossary(); }, 150);
-});
-
-document.getElementById('glossaryList').addEventListener('click', async e=>{
-  const editBtn = e.target.closest('[data-gedit]');
-  if(editBtn){
-    e.stopPropagation();
-    const item = glossary.find(g=>g.id === editBtn.dataset.gedit);
-    if(!item) return;
-    editingGlossaryId = item.id;
-    document.getElementById('gDlgTitle').textContent = 'Редактировать термин';
-    document.getElementById('gTitle').value = item.title;
-    document.getElementById('gAliases').value = item.aliases;
-    document.getElementById('gCatId').value = item.categoryId || '';
-    document.getElementById('gBrand').value = item.brand;
-    document.getElementById('gShort').value = item.shortDesc;
-    document.getElementById('gDetails').value = item.details;
-    document.getElementById('glossaryDlg').classList.add('show');
-    return;
-  }
-
-  const delBtn = e.target.closest('[data-gdel]');
-  if(delBtn){
-    e.stopPropagation();
-    if(!isAdmin) return;
-    if(!confirm('Удалить этот термин из справочника?')) return;
-    try{
-      await deleteDoc(doc(db, 'glossary', delBtn.dataset.gdel));
-      toast('Термин удалён');
-      await loadGlossary();
-    }catch(err){
-      console.error(err);
-      toast('Ошибка удаления');
-    }
-    return;
-  }
-
-  const card = e.target.closest('.glossary-card');
-  if(card) card.classList.toggle('open');
-});
-
-document.getElementById('addGlossaryBtn').onclick = ()=>{
-  editingGlossaryId = null;
-  document.getElementById('gDlgTitle').textContent = 'Новый термин';
-  ['gTitle','gAliases','gBrand','gShort','gDetails'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('gCatId').value = '';
-  document.getElementById('glossaryDlg').classList.add('show');
-};
-document.getElementById('gCancel').onclick = ()=>document.getElementById('glossaryDlg').classList.remove('show');
-document.getElementById('gSave').onclick = async ()=>{
-  if(!isAdmin){ toast('Только администратор'); return; }
-  const title = document.getElementById('gTitle').value.trim();
-  if(!title){ toast('Введите название термина'); return; }
-  const data = {
-    title,
-    aliases: document.getElementById('gAliases').value.trim(),
-    categoryId: document.getElementById('gCatId').value,
-    brand: document.getElementById('gBrand').value.trim(),
-    shortDesc: document.getElementById('gShort').value.trim(),
-    details: document.getElementById('gDetails').value.trim()
-  };
-  try{
-    const id = editingGlossaryId || genId('g');
-    await setDoc(doc(db, 'glossary', id), data);
-    document.getElementById('glossaryDlg').classList.remove('show');
-    toast(editingGlossaryId ? 'Термин обновлён' : 'Термин добавлен');
-    editingGlossaryId = null;
-    await loadGlossary();
-  }catch(e){
-    console.error(e);
-    toast('Ошибка сохранения термина');
-  }
-};
-
-// --- Импорт JSON ---
-document.getElementById('importGlossaryBtn').onclick = ()=>{
-  document.getElementById('importJson').value = '';
-  document.getElementById('importFile').value = '';
-  document.getElementById('importDefaultBrand').value = '';
-  document.getElementById('importDlg').classList.add('show');
-};
-document.getElementById('importCancel').onclick = ()=>document.getElementById('importDlg').classList.remove('show');
-
-document.getElementById('importFile').addEventListener('change', async e=>{
-  const file = e.target.files?.[0];
-  if(!file) return;
-  try{
-    document.getElementById('importJson').value = await file.text();
-    toast('Файл загружен, нажмите «Импортировать»');
-  }catch{
-    toast('Не удалось прочитать файл');
-  }
-  e.target.value = '';
-});
-
-document.getElementById('copyAiPromptBtn').onclick = async ()=>{
-  const catsList = categories.length ? categories.map(c=>c.name).join(', ') : 'Телевизоры, Холодильники, Стиральные машины';
-  const prompt = `Сгенерируй JSON-массив терминов для справочника продавца электроники и бытовой техники.
-Верни ТОЛЬКО валидный JSON-массив без лишнего текста.
-
-Доступные категории: ${catsList}
-
-Формат каждого объекта:
-[
-  {
-    "title": "OLED",
-    "aliases": "OLED evo, Self-lit OLED",
-    "category": "Название категории из списка выше (или пустая строка для общих терминов)",
-    "brand": "Название бренда, например LG или Samsung (или пустая строка, если термин общий)",
-    "shortDesc": "Короткое объяснение простыми словами для клиента (1-2 предложения)",
-    "details": "Подробности: преимущества, отличия реализации у этого бренда, аргументы для продажи"
-  }
-]
-
-Сделай термины для: [УКАЖИ БРЕНД И ТИП ТОВАРА]`;
-
-  const ok = await copyText(prompt, 'Промпт скопирован! Вставь его в ИИ');
-  if(!ok) toast('Не удалось скопировать автоматически');
-};
-
-document.getElementById('importRun').onclick = async ()=>{
-  if(!isAdmin){ toast('Только администратор'); return; }
-  const raw = document.getElementById('importJson').value.trim();
-  if(!raw){ toast('Вставьте JSON или выберите файл'); return; }
-
-  let arr;
-  try{
-    const clean = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-    const parsed = JSON.parse(clean);
-    arr = Array.isArray(parsed) ? parsed : (parsed?.terms || parsed?.glossary || parsed?.items);
-    if(!Array.isArray(arr)) throw new Error();
-  }catch{
-    toast('Ошибка в формате JSON');
-    return;
-  }
-
-  const defaultCatId = document.getElementById('importDefaultCat').value;
-  const defaultBrand = document.getElementById('importDefaultBrand').value.trim();
-  const updateExisting = document.getElementById('importUpdateExisting').checked;
-
-  const catIds = new Set(categories.map(c=>c.id));
-  const catByName = new Map(categories.map(c=>[c.name.trim().toLowerCase(), c.id]));
-
-  const existingById = new Map(glossary.map(g=>[g.id, g]));
-  const existingByKey = new Map(glossary.map(g=>[
-    `${g.title.trim().toLowerCase()}|${g.brand.trim().toLowerCase()}|${g.categoryId || ''}`,
-    g.id
-  ]));
-
-  const ops = [];
-  let added = 0;
-  let updated = 0;
-  let skipped = 0;
-
-  arr.forEach((item, idx)=>{
-    if(!item || typeof item !== 'object'){ skipped++; return; }
-    const title = String(item.title ?? item.name ?? '').trim();
-    if(!title){ skipped++; return; }
-
-    const rawAliases = item.aliases ?? item.synonyms ?? '';
-    const aliases = Array.isArray(rawAliases)
-      ? rawAliases.map(x=>String(x).trim()).filter(Boolean).join(', ')
-      : String(rawAliases).trim();
-
-    let categoryId = defaultCatId;
-    if(item.categoryId && catIds.has(String(item.categoryId))){
-      categoryId = String(item.categoryId);
-    }else if(item.category || item.categoryName){
-      const catKey = String(item.category ?? item.categoryName).trim().toLowerCase();
-      if(catByName.has(catKey)) categoryId = catByName.get(catKey);
-    }
-
-    const brand = item.brand !== undefined ? String(item.brand).trim() || defaultBrand : defaultBrand;
-    const shortDesc = String(item.shortDesc ?? item.short ?? item.description ?? '').trim();
-    const details = String(item.details ?? item.detail ?? '').trim();
-
-    const data = { title, aliases, categoryId, brand, shortDesc, details };
-    const uniqKey = `${title.toLowerCase()}|${brand.toLowerCase()}|${categoryId}`;
-
-    let docId = null;
-    if(updateExisting){
-      if(item.id && existingById.has(String(item.id))){
-        docId = String(item.id);
-      }else if(existingByKey.has(uniqKey)){
-        docId = existingByKey.get(uniqKey);
-      }
-    }
-
-    if(docId){
-      updated++;
-    }else{
-      docId = 'g' + Date.now().toString(36) + idx.toString(36) + Math.random().toString(36).slice(2,5);
-      added++;
-      if(updateExisting) existingByKey.set(uniqKey, docId);
-    }
-
-    ops.push({ id: docId, data });
-  });
-
-  if(!ops.length){
-    toast('Нет подходящих терминов для импорта');
-    return;
-  }
-
-  try{
-    for(let i = 0; i < ops.length; i += 400){
-      const batch = writeBatch(db);
-      ops.slice(i, i + 400).forEach(op=>{
-        batch.set(doc(db, 'glossary', op.id), op.data);
-      });
-      await batch.commit();
-    }
-    document.getElementById('importDlg').classList.remove('show');
-    toast(`Готово: +${added}, обновлено ${updated}${skipped ? `, пропущено ${skipped}` : ''}`);
-    await loadGlossary();
-  }catch(e){
-    console.error(e);
-    toast('Ошибка записи в базу');
-  }
-};
-
-// --- Экспорт JSON ---
-function buildExportJson(){
-  const catNameById = new Map(categories.map(c=>[c.id, c.name]));
-  const data = glossary.map(g=>({
-    id: g.id,
-    title: g.title,
-    aliases: g.aliases,
-    category: catNameById.get(g.categoryId) || '',
-    categoryId: g.categoryId || '',
-    brand: g.brand,
-    shortDesc: g.shortDesc,
-    details: g.details
-  }));
-  return JSON.stringify(data, null, 2);
-}
-
-document.getElementById('exportGlossaryBtn').onclick = ()=>{
-  document.getElementById('exportCount').textContent = glossary.length;
-  document.getElementById('exportJson').value = buildExportJson();
-  document.getElementById('exportDlg').classList.add('show');
-};
-document.getElementById('exportClose').onclick = ()=>document.getElementById('exportDlg').classList.remove('show');
-document.getElementById('exportCopy').onclick = async ()=>{
-  const area = document.getElementById('exportJson');
-  const ok = await copyText(area.value, 'JSON скопирован');
-  if(!ok){
-    area.select();
-    document.execCommand('copy');
-    toast('JSON скопирован');
-  }
-};
-document.getElementById('exportDownload').onclick = ()=>{
-  const json = document.getElementById('exportJson').value;
-  const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `glossary-${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  toast('Файл скачан');
-};
-
-// ============================================
-// 9. НАВИГАЦИЯ
-// ============================================
-document.getElementById('catsGrid').addEventListener('click', e=>{
-  const tile = e.target.closest('[data-cat]'); if(!tile) return;
-  const cat = categories.find(c=>c.id===tile.dataset.cat);
-  if(!cat) return;
-  currentCat = cat;
-  prodQuery = '';
-  prodSort = null;
-  document.getElementById('prodSearch').value = '';
-  updateSortButtons();
-  document.getElementById('catTitle').textContent = cat.emoji+' '+cat.name;
-  document.getElementById('homeView').style.display = 'none';
-  document.getElementById('categoryView').style.display = 'block';
-  document.getElementById('glossaryView').style.display = 'none';
-  loadProducts(cat.id);
-});
-
-document.getElementById('backBtn').onclick = ()=>{
-  currentCat = null;
-  document.getElementById('categoryView').style.display = 'none';
-  document.getElementById('homeView').style.display = 'block';
-};
-
-document.getElementById('mainTabs').addEventListener('click', e=>{
-  const tab = e.target.closest('.tab'); if(!tab) return;
-  const name = tab.dataset.tab;
-  currentCat = null;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t===tab));
-  document.getElementById('homeView').style.display = name==='home' ? 'block' : 'none';
-  document.getElementById('categoryView').style.display = 'none';
-  document.getElementById('glossaryView').style.display = name==='glossary' ? 'block' : 'none';
-});
-
-// ============================================
-// 10. ДОБАВЛЕНИЕ КАТЕГОРИИ
-// ============================================
-document.getElementById('addCatBtn').onclick = ()=>{
-  document.getElementById('catName').value = '';
-  document.getElementById('catEmoji').value = '';
-  document.getElementById('catDlg').classList.add('show');
-};
-document.getElementById('catCancel').onclick = ()=>document.getElementById('catDlg').classList.remove('show');
-document.getElementById('catSave').onclick = async ()=>{
-  const name = document.getElementById('catName').value.trim();
-  const emoji = document.getElementById('catEmoji').value.trim() || '📦';
-  if(!name){ toast('Введите название'); return; }
-  await saveCategory({ name, emoji });
-  document.getElementById('catDlg').classList.remove('show');
-};
-
-// ============================================
-// 11. АВТОРИЗАЦИЯ
-// ============================================
-document.getElementById('loginBtn').onclick = ()=>document.getElementById('loginDlg').classList.add('show');
-document.getElementById('loginCancel').onclick = ()=>document.getElementById('loginDlg').classList.remove('show');
-document.getElementById('loginSubmit').onclick = async ()=>{
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  if(!email || !pass){ toast('Введите email и пароль'); return; }
-  try{
-    const cred = await signInWithEmailAndPassword(auth, email, pass);
-    document.getElementById('loginDlg').classList.remove('show');
-    toast(cred.user.uid === ADMIN_UID ? 'Вы вошли как администратор' : 'Нет прав администратора');
-  }catch(e){ toast('Неверный email или пароль'); }
-};
-document.getElementById('logoutBtn').onclick = async ()=>{ await signOut(auth); toast('Вы вышли'); };
-
-onAuthStateChanged(auth, (user)=>{
-  isAdmin = !!(user && user.uid === ADMIN_UID);
-  document.getElementById('addCatBtn').style.display = isAdmin ? '' : 'none';
-  document.getElementById('addProductBtn').style.display = isAdmin ? '' : 'none';
-  document.getElementById('addGlossaryBtn').style.display = isAdmin ? '' : 'none';
-  document.getElementById('importGlossaryBtn').style.display = isAdmin ? '' : 'none';
-  document.getElementById('exportGlossaryBtn').style.display = isAdmin ? '' : 'none';
-  document.getElementById('loginBtn').style.display = user ? 'none' : '';
-  document.getElementById('logoutBtn').style.display = user ? '' : 'none';
-  renderCats();
-  renderGlossary();
-  if(currentCat) renderProducts();
-});
-
-// ============================================
-// 12. ТЕМА И PWA
-// ============================================
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme', t);
-  localStorage.setItem('sellerTheme', t);
-  document.getElementById('themeBtn').textContent = t==='dark' ? '☀️' : '🌙';
-}
-applyTheme(localStorage.getItem('sellerTheme') || 'light');
-document.getElementById('themeBtn').onclick = ()=>{
-  applyTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
-};
-
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
-
-// ============================================
-// 13. СТАРТ
-// ============================================
-loadCategories();
-loadGlossary();
-</script>
-</body>
-</html>
+    return { group: 'Общее', key: parts[0], value: '' }
