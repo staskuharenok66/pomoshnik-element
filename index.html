@@ -318,9 +318,13 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 
     <div id="gStepBrands" style="display:none">
       <button class="back-btn" id="gBackToSections">← Назад к видам техники</button>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div class="cat-title" id="gSecTitle"></div>
-        <button class="btn small" id="addGBrandBtn" style="display:none">+ Бренд</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn secondary small" id="gSecExportBtn" style="display:none">📤 Экспорт</button>
+          <button class="btn secondary small" id="gSecImportBtn" style="display:none">📥 Импорт</button>
+          <button class="btn small" id="addGBrandBtn" style="display:none">+ Бренд</button>
+        </div>
       </div>
       <div class="rect-list" id="gBrandsList"></div>
     </div>
@@ -1461,6 +1465,8 @@ onAuthStateChanged(auth, (user)=>{
   document.getElementById('addGSecBtn').style.display = isAdmin ? '' : 'none';
   document.getElementById('addTermBtn').style.display = isAdmin ? '' : 'none';
   document.getElementById('addGBrandBtn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('gSecExportBtn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('gSecImportBtn').style.display = isAdmin ? '' : 'none';
   document.getElementById('gExportBtn').style.display = isAdmin ? '' : 'none';
   document.getElementById('gImportBtn').style.display = isAdmin ? '' : 'none';
   if(activeGSection) renderGBrands();
@@ -1661,6 +1667,7 @@ document.getElementById('gSectionsList').addEventListener('click', async e=>{
   if(!sec) return;
 
   activeGSection = sec;
+  activeGBrand = null;
   document.getElementById('gSecTitle').textContent = `${sec.icon} ${sec.name}`;
   renderGBrands();
   showGlossaryStep('brands');
@@ -1700,10 +1707,12 @@ document.getElementById('gBrandsList').addEventListener('click', async e=>{
 
 document.getElementById('gBackToSections').onclick = ()=>{
   activeGSection = null;
+  activeGBrand = null;
   showGlossaryStep('sections');
 };
 document.getElementById('gBackToBrands').onclick = ()=>{
   activeGBrand = null;
+  renderGBrands();
   showGlossaryStep('brands');
 };
 
@@ -1814,7 +1823,7 @@ function fillBrandSelect(sectionId, selectedBrandId){
 document.getElementById('addTermBtn').onclick = ()=>{
   if(!activeGSection) return;
   editingTermId = null;
-  fillBrandSelect(activeGSection.id, activeGBrand !== '__ALL__' ? activeGBrand.id : '');
+  fillBrandSelect(activeGSection.id, (activeGBrand && activeGBrand !== '__ALL__') ? activeGBrand.id : '');
   document.getElementById('termDlgTitle').textContent = 'Новый термин';
   document.getElementById('tTitle').value = '';
   document.getElementById('tShort').value = '';
@@ -1845,10 +1854,14 @@ document.getElementById('termSave').onclick = async ()=>{
 
 let gImportData = null;
 
+function isGlossaryAllMode(){
+  return !activeGBrand || activeGBrand === '__ALL__';
+}
+
 function getCurrentGlossaryExportList(){
-  if(!activeGSection || !activeGBrand) return [];
+  if(!activeGSection) return [];
   let list = terms.filter(t=>t.sectionId === activeGSection.id);
-  if(activeGBrand !== '__ALL__'){
+  if(!isGlossaryAllMode()){
     list = list.filter(t=>t.brandId === activeGBrand.id);
   }
   return list;
@@ -1856,7 +1869,7 @@ function getCurrentGlossaryExportList(){
 
 function buildGlossaryTemplateObject(){
   const secName = activeGSection ? activeGSection.name : 'Категория';
-  const isAll = activeGBrand === '__ALL__';
+  const isAll = isGlossaryAllMode();
   const brandName = isAll ? '' : activeGBrand.name;
 
   if(isAll){
@@ -1865,13 +1878,19 @@ function buildGlossaryTemplateObject(){
       version: 1,
       section: secName,
       brand: '',
-      _comment: `Трафарет терминов для категории «${secName}» (несколько брендов). Замените примеры в массиве terms на реальные термины: brand — название бренда (например LG, Samsung, TCL; оставьте пустым для общего термина), title — точное слово/аббревиатура из карточки товара для автоподсветки, short — краткая расшифровка для продавца (1-2 предложения), details — подробности и польза для покупателя.`,
+      _comment: `Трафарет справочника для категории «${secName}» сразу по всем брендам. Замените примеры в массиве terms на реальные термины для нужных брендов (LG, Samsung, TCL, Haier и т.д.). Поле brand — название бренда (оставьте пустым "" для общих терминов категории; недостающие бренды создадутся автоматически при импорте). Поле title — точное слово/аббревиатура из карточки товара для автоподсветки. Поле short — краткая расшифровка (1-2 предложения). Поле details — подробное описание и польза для покупателя.`,
       terms: [
         {
-          brand: 'Пример: Бренд (или оставьте пустым)',
-          title: 'Пример: Название термина или аббревиатуры',
+          brand: 'Пример: Бренд 1',
+          title: 'Пример: Название фирменной технологии',
           short: 'Краткая расшифровка простыми словами для быстрого ответа покупателю.',
-          details: 'Подробное объяснение технологии или параметра: что даёт на практике и на что обратить внимание.'
+          details: 'Подробное объяснение технологии: что даёт на практике и на что обратить внимание.'
+        },
+        {
+          brand: '',
+          title: 'Пример: Общий термин категории',
+          short: 'Краткая расшифровка общего параметра (будет подсвечиваться во всех брендах этой категории).',
+          details: 'Подробное объяснение общего параметра.'
         }
       ]
     };
@@ -1900,34 +1919,45 @@ function makeTermKey(brandId, title){
   ].join('||');
 }
 
-document.getElementById('gExportBtn').onclick = ()=>{
-  if(!activeGSection || !activeGBrand){ toast('Сначала откройте раздел', true); return; }
+function isGeneralBrandName(name){
+  const n = String(name || '').trim().toLowerCase();
+  return !n || n === 'общий' || n === 'общие' || n === 'все' || n === 'все бренды' || n === 'general' || n === 'all';
+}
+
+function openGlossaryExport(){
+  if(!activeGSection){ toast('Сначала откройте категорию справочника', true); return; }
   const list = getCurrentGlossaryExportList();
   if(!list.length){
     toast('Терминов пока нет. Трафарет можно скачать через «Импорт»', true);
     return;
   }
-  const targetName = activeGBrand === '__ALL__'
+  const isAll = isGlossaryAllMode();
+  const targetName = isAll
     ? `Все бренды (${activeGSection.name})`
     : `${activeGBrand.icon} ${activeGBrand.name} (${activeGSection.name})`;
   document.getElementById('gExportInfo').innerHTML =
     `Раздел: <b>${esc(activeGSection.icon)} ${esc(targetName)}</b><br>Терминов к экспорту: <b>${list.length}</b>`;
   document.getElementById('gExportDlg').classList.add('show');
-};
+}
+
+document.getElementById('gSecExportBtn').onclick = openGlossaryExport;
+document.getElementById('gExportBtn').onclick = openGlossaryExport;
 document.getElementById('gExportCancel').onclick = ()=>document.getElementById('gExportDlg').classList.remove('show');
 
 document.getElementById('gExportDo').onclick = ()=>{
-  if(!activeGSection || !activeGBrand) return;
+  if(!activeGSection) return;
   const list = getCurrentGlossaryExportList();
   if(!list.length) return;
   try{
-    const isAll = activeGBrand === '__ALL__';
+    const isAll = isGlossaryAllMode();
+    const secBrands = gBrands.filter(b=>b.sectionId === activeGSection.id);
     const payload = {
       app: 'pomoshnik-prodavca-glossary',
       version: 1,
       exportedAt: new Date().toISOString(),
       section: activeGSection.name,
       brand: isAll ? '' : activeGBrand.name,
+      ...(isAll ? { brands: secBrands.map(b=>({ name: b.name, icon: b.icon })) } : {}),
       terms: list.map(t=>{
         if(isAll){
           const bObj = gBrands.find(b=>b.id === t.brandId);
@@ -1967,34 +1997,37 @@ document.getElementById('gExportDo').onclick = ()=>{
   }
 };
 
-document.getElementById('gImportBtn').onclick = ()=>{
-  if(!activeGSection || !activeGBrand){ toast('Сначала откройте раздел', true); return; }
+function openGlossaryImport(){
+  if(!activeGSection){ toast('Сначала откройте категорию справочника', true); return; }
   gImportData = null;
   document.getElementById('gImportFile').value = '';
   document.getElementById('gImportPreview').textContent = '';
   document.getElementById('gImportDo').disabled = true;
 
-  const isAll = activeGBrand === '__ALL__';
+  const isAll = isGlossaryAllMode();
   document.getElementById('gImportTargetInfo').innerHTML = isAll
-    ? `Импорт в раздел: <b>${esc(activeGSection.icon)} ${esc(activeGSection.name)} (по брендам из файла)</b>`
+    ? `Импорт в категорию: <b>${esc(activeGSection.icon)} ${esc(activeGSection.name)} (все бренды из файла)</b>`
     : `Импорт в бренд: <b>${esc(activeGBrand.icon)} ${esc(activeGBrand.name)}</b> (${esc(activeGSection.name)})`;
 
   document.getElementById('gImportHint').innerHTML = isAll
-    ? `⚠️ При импорте в «Все термины раздела» каждый термин привяжется к бренду из поля <code>brand</code> (недостающие бренды создадутся автоматически). Одинаковые термины обновятся.`
+    ? `⚠️ Все бренды из файла создадутся в разделе <b>${esc(activeGSection.name)}</b> автоматически, а термины разложатся по своим брендам (пустой <code>brand</code> = общий термин). Повторные термины обновятся.`
     : `⚠️ Все термины из файла будут привязаны к бренду <b>${esc(activeGBrand.name)}</b>. Термины с одинаковым <b>названием (title)</b> будут <b>обновлены</b>, а не задвоены.`;
 
   document.getElementById('gImportDlg').classList.add('show');
-};
+}
+
+document.getElementById('gSecImportBtn').onclick = openGlossaryImport;
+document.getElementById('gImportBtn').onclick = openGlossaryImport;
 document.getElementById('gImportCancel').onclick = ()=>document.getElementById('gImportDlg').classList.remove('show');
 
 document.getElementById('gTemplateDownloadBtn').onclick = ()=>{
-  if(!activeGSection || !activeGBrand) return;
+  if(!activeGSection) return;
   const tpl = buildGlossaryTemplateObject();
   const blob = new Blob([JSON.stringify(tpl, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   const safeSec = activeGSection.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
-  const safeBrand = activeGBrand === '__ALL__' ? 'ALL' : activeGBrand.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
+  const safeBrand = isGlossaryAllMode() ? 'ALL' : activeGBrand.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
   a.href = url;
   a.download = `template-terms-${safeSec}-${safeBrand}.json`;
   document.body.appendChild(a);
@@ -2026,38 +2059,79 @@ document.getElementById('gImportFile').onchange = async (e)=>{
   try{
     const text = await file.text();
     const data = JSON.parse(text);
-    const rawList = Array.isArray(data) ? data : (data && Array.isArray(data.terms) ? data.terms : null);
 
-    if(!rawList){
-      preview.textContent = '❌ Неверный формат файла: нужен массив terms[].';
+    const brandMetaMap = {};
+    if(data && Array.isArray(data.brands)){
+      data.brands.forEach(b=>{
+        if(b && typeof b === 'object' && b.name){
+          brandMetaMap[String(b.name).trim().toLowerCase()] = String(b.icon || '🏷️').trim() || '🏷️';
+        }
+      });
+    }
+
+    let rawItems = [];
+    if(Array.isArray(data)){
+      rawItems = data;
+    } else if(data && Array.isArray(data.terms)){
+      rawItems = data.terms;
+    } else if(data && Array.isArray(data.brands)){
+      data.brands.forEach(b=>{
+        if(!b || !Array.isArray(b.terms)) return;
+        const bName = String(b.name || b.brand || '').trim();
+        const bIcon = String(b.icon || '🏷️').trim() || '🏷️';
+        b.terms.forEach(t=>{
+          if(t && typeof t === 'object'){
+            rawItems.push({ ...t, brand: t.brand ?? bName, brandIcon: bIcon });
+          }
+        });
+      });
+    } else if(data && data.brands && typeof data.brands === 'object'){
+      Object.entries(data.brands).forEach(([bName, arr])=>{
+        if(!Array.isArray(arr)) return;
+        arr.forEach(t=>{
+          if(t && typeof t === 'object'){
+            rawItems.push({ ...t, brand: t.brand ?? bName });
+          }
+        });
+      });
+    } else {
+      preview.textContent = '❌ Неверный формат файла: нужен массив terms[] или brands[].';
       return;
     }
 
     const topBrand = (!Array.isArray(data) && data.brand) ? String(data.brand).trim() : '';
-    const valid = rawList.map(item=>{
+    const valid = rawItems.map(item=>{
       if(!item || typeof item !== 'object') return null;
       const title = String(item.title ?? item.name ?? item.term ?? '').trim();
-      if(!title) return null;
+      if(!title || title.startsWith('Пример:')) return null;
+      const rawBrand = String(item.brand ?? topBrand ?? '').trim();
+      const brand = isGeneralBrandName(rawBrand) ? '' : rawBrand;
+      const bIcon = String(item.brandIcon || (brand ? brandMetaMap[brand.toLowerCase()] : '') || '🏷️').trim() || '🏷️';
       return {
         title,
         short: String(item.short ?? item.description ?? item.desc ?? '').trim(),
         details: String(item.details ?? item.full ?? '').trim(),
-        brand: String(item.brand ?? topBrand ?? '').trim()
+        brand,
+        brandIcon: bIcon
       };
     }).filter(Boolean);
 
+    const uniqueBrands = [...new Set(valid.map(v=>v.brand).filter(Boolean))];
     let warn = '';
     if(!Array.isArray(data)){
       if(data.section && activeGSection && String(data.section).trim().toLowerCase() !== activeGSection.name.trim().toLowerCase()){
         warn += `<br>⚠️ В файле раздел «${esc(data.section)}», но импорт пойдёт в «${esc(activeGSection.name)}».`;
       }
-      if(activeGBrand !== '__ALL__' && data.brand && String(data.brand).trim().toLowerCase() !== activeGBrand.name.trim().toLowerCase()){
+      if(!isGlossaryAllMode() && data.brand && String(data.brand).trim().toLowerCase() !== activeGBrand.name.trim().toLowerCase()){
         warn += `<br>⚠️ В файле бренд «${esc(data.brand)}», но термины привяжутся к «${esc(activeGBrand.name)}».`;
       }
     }
 
-    preview.innerHTML = `✅ Прочитано терминов: <b>${valid.length}</b>.${warn}`;
-    gImportData = { terms: valid };
+    const brandSummary = isGlossaryAllMode() && uniqueBrands.length
+      ? ` (брендов в файле: <b>${uniqueBrands.length}</b>)`
+      : '';
+    preview.innerHTML = `✅ Прочитано терминов: <b>${valid.length}</b>${brandSummary}.${warn}`;
+    gImportData = { terms: valid, brandMetaMap };
     btn.disabled = valid.length === 0;
   }catch(err){
     console.error(err);
@@ -2067,7 +2141,7 @@ document.getElementById('gImportFile').onchange = async (e)=>{
 
 document.getElementById('gImportDo').onclick = async ()=>{
   if(!isAdmin){ toast('Только администратор', true); return; }
-  if(!activeGSection || !activeGBrand){ toast('Раздел не открыт', true); return; }
+  if(!activeGSection){ toast('Раздел не открыт', true); return; }
   if(!gImportData || !gImportData.terms.length){ toast('Нет данных', true); return; }
 
   const btn = document.getElementById('gImportDo');
@@ -2085,8 +2159,24 @@ document.getElementById('gImportDo').onclick = async ()=>{
       if(!existingMap[key]) existingMap[key] = d.id;
     });
 
-    const isAll = activeGBrand === '__ALL__';
+    const isAll = isGlossaryAllMode();
     let added = 0, updated = 0, skipped = 0, createdBrands = 0;
+
+    if(isAll && gImportData.brandMetaMap){
+      for(const [bNorm, bIcon] of Object.entries(gImportData.brandMetaMap)){
+        if(isGeneralBrandName(bNorm)) continue;
+        const exists = gBrands.some(b=>b.sectionId === activeGSection.id && b.name.trim().toLowerCase() === bNorm);
+        if(!exists){
+          const origItem = gImportData.terms.find(t=>t.brand.toLowerCase() === bNorm);
+          const bName = origItem ? origItem.brand : bNorm;
+          const newBrandId = genId('gb');
+          const newBrandData = { sectionId: activeGSection.id, name: bName, icon: bIcon || '🏷️' };
+          await setDoc(doc(db, 'glossary_brands', newBrandId), newBrandData);
+          gBrands.push({ id: newBrandId, ...newBrandData });
+          createdBrands++;
+        }
+      }
+    }
 
     for(const item of gImportData.terms){
       let targetBrandId = '';
@@ -2098,7 +2188,7 @@ document.getElementById('gImportDo').onclick = async ()=>{
         let foundBrand = gBrands.find(b=>b.sectionId === activeGSection.id && b.name.trim().toLowerCase() === bNorm);
         if(!foundBrand){
           const newBrandId = genId('gb');
-          const newBrandData = { sectionId: activeGSection.id, name: item.brand.trim(), icon: '🏷️' };
+          const newBrandData = { sectionId: activeGSection.id, name: item.brand.trim(), icon: item.brandIcon || '🏷️' };
           await setDoc(doc(db, 'glossary_brands', newBrandId), newBrandData);
           foundBrand = { id: newBrandId, ...newBrandData };
           gBrands.push(foundBrand);
