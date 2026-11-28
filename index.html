@@ -20,11 +20,12 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45;min-height:100dvh;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) 90px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) 100px}
 header{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 0 8px;padding-top:calc(12px + env(safe-area-inset-top))}
 .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn{border:none;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
 .btn.secondary.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
 .btn.danger{background:var(--bad-bg);color:var(--bad);border:1px solid transparent}
@@ -79,8 +80,12 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .card-short{font-size:13.5px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .product-card.open .card-short{-webkit-line-clamp:unset}
 
-.card-toggle-hint{display:inline-flex;align-items:center;gap:4px;margin-top:9px;padding:4px 11px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--accent);transition:background .15s,border-color .15s}
+.card-actions-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:9px}
+.card-toggle-hint{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--accent);transition:background .15s,border-color .15s}
 .product-card.open .card-toggle-hint{background:var(--accent-soft);border-color:var(--accent)}
+
+.compare-toggle-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.compare-toggle-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
 /* Развёрнутая часть карточки */
 .product-card .details{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);min-width:0}
@@ -138,6 +143,88 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 [data-theme="dark"] .review-badge.defect{background:#3b2a05;color:#fbbf24}
 
 .admin-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+
+/* === ПЛАВАЮЩАЯ ПАНЕЛЬ СРАВНЕНИЯ === */
+.compare-bar{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 24px);max-width:var(--maxw);z-index:80;background:var(--card);border:1.5px solid var(--accent);border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px}
+.compare-bar.show{display:flex}
+.compare-bar-info{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--text)}
+.compare-bar-sub{font-size:12px;font-weight:500;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.compare-bar-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* === ОКНО СРАВНЕНИЯ ТОВАРОВ === */
+.compare-modal{position:fixed;inset:0;z-index:95;background:var(--bg);display:none;flex-direction:column;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.compare-modal.show{display:flex}
+.cmp-topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.cmp-topbar h2{font-size:17px;font-weight:700;flex:1;min-width:0}
+.cmp-scroll{flex:1;overflow-y:auto;padding:12px 12px calc(28px + env(safe-area-inset-bottom))}
+.cmp-inner{max-width:var(--maxw);margin:0 auto}
+
+/* Мини-карточки сравниваемых товаров */
+.cmp-products-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+@media (min-width:600px){.cmp-products-strip.cols-3{grid-template-columns:repeat(3,1fr)}.cmp-products-strip.cols-4{grid-template-columns:repeat(4,1fr)}}
+.cmp-prod-mini{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);min-width:0}
+.cmp-prod-top{display:flex;align-items:center;gap:8px;padding-right:22px}
+.cmp-mini-thumb{width:40px;height:40px;border-radius:9px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);background:var(--bg)}
+.cmp-mini-ph{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--accent-soft);flex-shrink:0}
+.cmp-mini-meta{min-width:0;flex:1}
+.cmp-mini-brand{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px}
+.cmp-mini-name{font-size:13px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.cmp-mini-price-row{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-top:auto}
+.cmp-mini-price{font-size:14px;font-weight:800;color:var(--accent)}
+.cmp-mini-price.muted{font-size:12.5px;font-weight:600;color:var(--muted)}
+.cmp-best-price{font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:6px;background:var(--good-bg);color:var(--good);white-space:nowrap}
+.cmp-remove-btn{position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Цветные метки товаров 1..4 */
+.cmp-dot{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:5px;color:#fff;font-size:10.5px;font-weight:800;flex-shrink:0}
+.cmp-dot.c-0{background:#4f6df5}
+.cmp-dot.c-1{background:#16a34a}
+.cmp-dot.c-2{background:#d97706}
+.cmp-dot.c-3{background:#9333ea}
+
+/* Переключатель "Только отличия" */
+.cmp-filter-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.cmp-diff-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-weight:600;cursor:pointer}
+.cmp-diff-btn.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+
+/* Блоки сравнения характеристик */
+.cmp-group-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+.cmp-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border)}
+.cmp-param{padding:8px 0;border-bottom:1px dashed var(--border)}
+.cmp-param:last-child{border-bottom:none;padding-bottom:0}
+.cmp-param:first-of-type{padding-top:2px}
+.cmp-param-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.cmp-param-key{font-size:13px;font-weight:700;color:var(--text);overflow-wrap:anywhere}
+.cmp-diff-tag{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;flex-shrink:0}
+
+.cmp-vals-grid{display:grid;grid-template-columns:1fr;gap:6px}
+.cmp-vals-grid.two-col{grid-template-columns:repeat(2,1fr)}
+@media (min-width:600px){.cmp-vals-grid.cols-3{grid-template-columns:repeat(3,1fr)}.cmp-vals-grid.cols-4{grid-template-columns:repeat(4,1fr)}}
+.cmp-vals-grid.stack-col{grid-template-columns:1fr}
+
+.cmp-val-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:7px 9px;min-width:0}
+.cmp-param.is-diff .cmp-val-box{border-color:rgba(79,109,245,.3)}
+.cmp-val-prod{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmp-val-prod span:last-child{overflow:hidden;text-overflow:ellipsis}
+.cmp-val-text{font-size:13.5px;font-weight:600;color:var(--text);line-height:1.38;overflow-wrap:anywhere}
+.cmp-val-text.ai-text{font-weight:500;line-height:1.45}
+.cmp-val-text.empty-val{color:var(--muted);font-weight:400}
+
+/* Секции по товарам для Особенностей, Плюсов/Минусов, Отзывов */
+.cmp-prod-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+.cmp-prod-section-head{display:flex;align-items:center;gap:8px;padding-bottom:8px;margin-bottom:10px;border-bottom:1px solid var(--border);font-size:14.5px;font-weight:700}
+
+.cmp-reviews-summary{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+.cmp-rev-sum-title{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.cmp-rev-sum-row{display:flex;flex-direction:column;gap:5px;padding:8px 0;border-bottom:1px dashed var(--border)}
+.cmp-rev-sum-row:last-child{border-bottom:none;padding-bottom:0}
+.cmp-rev-sum-head{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700}
+.cmp-rev-sum-badges{display:flex;gap:6px;flex-wrap:wrap}
+.cmp-stat-pill{font-size:12px;font-weight:600;padding:3px 8px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.cmp-stat-pill.pro{background:var(--good-bg);color:var(--good);border-color:transparent}
+.cmp-stat-pill.con{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.cmp-stat-pill.defect{background:#fef3c7;color:#92400e;border-color:transparent}
+[data-theme="dark"] .cmp-stat-pill.defect{background:#3b2a05;color:#fbbf24}
 
 .dlg{position:fixed;inset:0;z-index:110;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(15,20,35,.55)}
 .dlg.show{display:flex}
@@ -264,6 +351,39 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
         <input type="search" class="search-input" id="termSearch" placeholder="Поиск по терминам и особенностям..." autocomplete="off">
       </div>
       <div id="termsList" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Плавающая панель сравнения -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-info" id="compareBarInfo"></div>
+  <div class="compare-bar-actions">
+    <button type="button" class="btn secondary small" id="compareClearBtn" title="Очистить выбор">✕</button>
+    <button type="button" class="btn small" id="compareOpenBtn">⚖️ Сравнить</button>
+  </div>
+</div>
+
+<!-- Окно сравнения товаров -->
+<div class="compare-modal" id="compareModal">
+  <div class="cmp-topbar">
+    <h2>⚖️ Сравнение товаров</h2>
+    <button type="button" class="btn secondary small" id="compareCloseBtn">✕ Закрыть</button>
+  </div>
+  <div class="cmp-scroll">
+    <div class="cmp-inner">
+      <div class="cmp-products-strip" id="cmpProductsStrip"></div>
+      <div class="detail-tabs" id="cmpTabs">
+        <button type="button" class="d-tab active" data-cmp-tab="specs">📋 Характеристики</button>
+        <button type="button" class="d-tab" data-cmp-tab="aiSpecs">✨ Характеристики ИИ</button>
+        <button type="button" class="d-tab" data-cmp-tab="features">⚡ Особенности</button>
+        <button type="button" class="d-tab" data-cmp-tab="proscons">⚖️ Плюсы и минусы</button>
+        <button type="button" class="d-tab" data-cmp-tab="reviews">💬 Отзывы</button>
+      </div>
+      <div class="cmp-filter-row" id="cmpFilterRow">
+        <button type="button" class="cmp-diff-btn" id="cmpDiffToggle">🔍 Только отличия</button>
+      </div>
+      <div id="cmpContent"></div>
     </div>
   </div>
 </div>
@@ -508,6 +628,10 @@ let priceMaxK = null;
 let prodSort = null;
 let editingProductId = null;
 
+let compareIds = [];
+let cmpActiveTab = 'specs';
+let cmpOnlyDiff = false;
+
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, isErr){
   const box = document.getElementById('toasts');
@@ -572,6 +696,8 @@ async function loadProducts(catId){
         });
       }
     });
+    compareIds = compareIds.filter(id => products.some(p => p.id === id));
+    updateCompareBar();
     renderBrandFilters();
     renderProducts();
   }catch(e){
@@ -637,6 +763,7 @@ function renderProducts(){
     const hasSpecs = Object.keys(groups).length > 0;
     const hasFeatures = p.features && p.features.length > 0;
     const hasProsCons = (p.pros && p.pros.length > 0) || (p.cons && p.cons.length > 0);
+    const isCompared = compareIds.includes(p.id);
 
     return `
       <div class="product-card" data-pid="${esc(p.id)}">
@@ -647,7 +774,10 @@ function renderProducts(){
             <h3>${esc(p.name)}</h3>
             <div class="card-price${p.price!=null ? '' : ' muted'}">${p.price!=null ? Number(p.price).toLocaleString('ru-RU') + ' ₽' : 'Цена по запросу'}</div>
             ${p.shortDesc ? `<div class="card-short">${esc(p.shortDesc)}</div>` : ''}
-            <span class="card-toggle-hint">Подробнее ▾</span>
+            <div class="card-actions-row">
+              <span class="card-toggle-hint">Подробнее ▾</span>
+              <button type="button" class="compare-toggle-btn${isCompared ? ' active' : ''}" data-cmp-id="${esc(p.id)}">${isCompared ? '✓ В сравнении' : '⚖️ Сравнить'}</button>
+            </div>
           </div>
         </div>
         <div class="details">
@@ -717,6 +847,13 @@ function renderProducts(){
 }
 
 document.getElementById('productsList').addEventListener('click', async e=>{
+  const cmpBtn = e.target.closest('.compare-toggle-btn');
+  if(cmpBtn){
+    e.stopPropagation();
+    toggleCompare(cmpBtn.dataset.cmpId);
+    return;
+  }
+
   const dTab = e.target.closest('.d-tab');
   if(dTab){
     const card = dTab.closest('.product-card');
@@ -766,6 +903,328 @@ document.getElementById('productsList').addEventListener('click', async e=>{
     const isOpen = card.classList.toggle('open');
     const hint = card.querySelector('.card-toggle-hint');
     if(hint) hint.textContent = isOpen ? 'Свернуть ▴' : 'Подробнее ▾';
+  }
+});
+
+// ============================================
+// СРАВНЕНИЕ ТОВАРОВ
+// ============================================
+function syncCompareButtonsInList(){
+  document.querySelectorAll('.compare-toggle-btn').forEach(btn=>{
+    const active = compareIds.includes(btn.dataset.cmpId);
+    btn.classList.toggle('active', active);
+    btn.textContent = active ? '✓ В сравнении' : '⚖️ Сравнить';
+  });
+}
+
+function toggleCompare(pid){
+  const idx = compareIds.indexOf(pid);
+  if(idx !== -1){
+    compareIds.splice(idx, 1);
+  } else {
+    if(compareIds.length >= 4){
+      toast('Можно сравнивать до 4 товаров одновременно', true);
+      return;
+    }
+    compareIds.push(pid);
+  }
+  syncCompareButtonsInList();
+  updateCompareBar();
+}
+
+function updateCompareBar(){
+  const bar = document.getElementById('compareBar');
+  const info = document.getElementById('compareBarInfo');
+  const openBtn = document.getElementById('compareOpenBtn');
+
+  if(!compareIds.length){
+    bar.classList.remove('show');
+    return;
+  }
+
+  const selected = compareIds.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+  const names = selected.map(p=>p.name).join(' · ');
+
+  if(selected.length === 1){
+    info.innerHTML = `Выбран 1 товар <div class="compare-bar-sub">Выберите ещё минимум 1 для сравнения</div>`;
+    openBtn.disabled = true;
+    openBtn.textContent = '⚖️ Сравнить';
+  } else {
+    info.innerHTML = `Выбрано: ${selected.length} из 4 <div class="compare-bar-sub">${esc(names)}</div>`;
+    openBtn.disabled = false;
+    openBtn.textContent = `⚖️ Сравнить (${selected.length})`;
+  }
+  bar.classList.add('show');
+}
+
+function clearCompare(){
+  compareIds = [];
+  syncCompareButtonsInList();
+  updateCompareBar();
+  closeCompare();
+}
+
+function openCompare(){
+  const selected = compareIds.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+  if(selected.length < 2){
+    toast('Выберите минимум 2 товара', true);
+    return;
+  }
+  cmpActiveTab = 'specs';
+  document.querySelectorAll('#cmpTabs .d-tab').forEach(t=>t.classList.toggle('active', t.dataset.cmpTab === cmpActiveTab));
+  renderCompareModal();
+  document.getElementById('compareModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCompare(){
+  document.getElementById('compareModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function getCompareProducts(){
+  return compareIds.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+}
+
+function shortProdLabel(p){
+  return p.brand ? `${p.brand} ${p.name}` : p.name;
+}
+
+function renderCompareModal(){
+  const list = getCompareProducts();
+  if(list.length < 2){
+    closeCompare();
+    return;
+  }
+
+  // Лучшая (минимальная) цена
+  const validPrices = list.map(p=>p.price).filter(pr=>pr !== null && pr !== undefined && !isNaN(pr));
+  const minPrice = validPrices.length >= 2 ? Math.min(...validPrices) : null;
+  const allSamePrice = validPrices.length >= 2 && validPrices.every(pr=>pr === minPrice);
+
+  const strip = document.getElementById('cmpProductsStrip');
+  strip.className = `cmp-products-strip cols-${list.length}`;
+  strip.innerHTML = list.map((p, idx)=>{
+    const isBest = minPrice !== null && !allSamePrice && p.price === minPrice;
+    return `
+      <div class="cmp-prod-mini">
+        <button type="button" class="cmp-remove-btn" data-cmp-remove="${esc(p.id)}" title="Убрать из сравнения">✕</button>
+        <div class="cmp-prod-top">
+          ${p.imageUrl ? `<img class="cmp-mini-thumb" src="${esc(p.imageUrl)}" alt="${esc(p.name)}">` : `<div class="cmp-mini-ph">📦</div>`}
+          <div class="cmp-mini-meta">
+            <div class="cmp-mini-brand"><span class="cmp-dot c-${idx}">${idx+1}</span>${p.brand ? esc(p.brand) : 'Товар'}</div>
+            <div class="cmp-mini-name">${esc(p.name)}</div>
+          </div>
+        </div>
+        <div class="cmp-mini-price-row">
+          <div class="cmp-mini-price${p.price!=null ? '' : ' muted'}">${p.price!=null ? Number(p.price).toLocaleString('ru-RU') + ' ₽' : 'По запросу'}</div>
+          ${isBest ? `<span class="cmp-best-price">💰 Выгоднее</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  const showDiffControl = (cmpActiveTab === 'specs' || cmpActiveTab === 'aiSpecs');
+  document.getElementById('cmpFilterRow').style.display = showDiffControl ? 'flex' : 'none';
+  document.getElementById('cmpDiffToggle').classList.toggle('active', cmpOnlyDiff);
+
+  renderCompareContent(list);
+}
+
+function renderCompareSpecsSection(list, fieldName, isAi){
+  // Собираем все уникальные группы и ключи с сохранением порядка
+  const groupOrder = [];
+  const groupKeysMap = {};
+
+  list.forEach(p=>{
+    (p[fieldName] || []).forEach(s=>{
+      const g = (s.group || 'Общее').trim();
+      const k = (s.key || '').trim();
+      if(!k) return;
+      if(!groupKeysMap[g]){
+        groupKeysMap[g] = [];
+        groupOrder.push(g);
+      }
+      if(!groupKeysMap[g].includes(k)) groupKeysMap[g].push(k);
+    });
+  });
+
+  if(!groupOrder.length){
+    return `<div class="empty-pane">${isAi ? 'Характеристики ИИ не заполнены ни у одного из выбранных товаров' : 'Характеристики не заполнены ни у одного из выбранных товаров'}</div>`;
+  }
+
+  let renderedGroups = 0;
+  const html = groupOrder.map(g=>{
+    const keys = groupKeysMap[g];
+    const rowsHtml = keys.map(k=>{
+      const values = list.map(p=>{
+        const matches = (p[fieldName] || []).filter(s=>(s.group || 'Общее').trim() === g && (s.key || '').trim() === k);
+        if(!matches.length) return '—';
+        return matches.map(m=>m.value).filter(Boolean).join(', ') || '—';
+      });
+
+      const normValues = values.map(v=>v.trim().toLowerCase());
+      const hasDiff = normValues.some(v=>v !== normValues[0]);
+      if(cmpOnlyDiff && !hasDiff) return '';
+
+      const gridClass = isAi ? 'stack-col' : (list.length === 2 ? 'two-col' : `cols-${list.length}`);
+      return `
+        <div class="cmp-param${hasDiff ? ' is-diff' : ''}">
+          <div class="cmp-param-head">
+            <span class="cmp-param-key">${esc(k)}</span>
+            ${hasDiff ? `<span class="cmp-diff-tag">отличие</span>` : ''}
+          </div>
+          <div class="cmp-vals-grid ${gridClass}">
+            ${list.map((p, idx)=>{
+              const val = values[idx];
+              const isEmpty = val === '—';
+              return `
+                <div class="cmp-val-box">
+                  <div class="cmp-val-prod"><span class="cmp-dot c-${idx}">${idx+1}</span><span>${esc(shortProdLabel(p))}</span></div>
+                  <div class="cmp-val-text${isAi ? ' ai-text' : ''}${isEmpty ? ' empty-val' : ''}">${isEmpty ? '—' : linkifyTerms(val, p.brand)}</div>
+                </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+    }).filter(Boolean).join('');
+
+    if(!rowsHtml) return '';
+    renderedGroups++;
+    return `
+      <div class="cmp-group-card">
+        <div class="cmp-group-title">${isAi ? '✨ ' : ''}${esc(g)}</div>
+        ${rowsHtml}
+      </div>`;
+  }).join('');
+
+  if(!renderedGroups){
+    return `<div class="empty-pane">По всем заполненным пунктам выбранные товары совпадают.</div>`;
+  }
+  return html;
+}
+
+function renderCompareContent(list){
+  const box = document.getElementById('cmpContent');
+
+  if(cmpActiveTab === 'specs'){
+    box.innerHTML = renderCompareSpecsSection(list, 'specs', false);
+    return;
+  }
+
+  if(cmpActiveTab === 'aiSpecs'){
+    box.innerHTML = renderCompareSpecsSection(list, 'aiSpecs', true);
+    return;
+  }
+
+  if(cmpActiveTab === 'features'){
+    box.innerHTML = list.map((p, idx)=>`
+      <div class="cmp-prod-section">
+        <div class="cmp-prod-section-head">
+          <span class="cmp-dot c-${idx}">${idx+1}</span>
+          <span>${esc(shortProdLabel(p))}</span>
+        </div>
+        ${(p.features && p.features.length)
+          ? `<ul class="features-list">${p.features.map(f=>`<li>${linkifyTerms(f, p.brand)}</li>`).join('')}</ul>`
+          : `<div class="empty-pane">Особенности не добавлены</div>`}
+      </div>`).join('');
+    return;
+  }
+
+  if(cmpActiveTab === 'proscons'){
+    box.innerHTML = list.map((p, idx)=>{
+      const hasProsCons = (p.pros && p.pros.length > 0) || (p.cons && p.cons.length > 0);
+      return `
+        <div class="cmp-prod-section">
+          <div class="cmp-prod-section-head">
+            <span class="cmp-dot c-${idx}">${idx+1}</span>
+            <span>${esc(shortProdLabel(p))}</span>
+          </div>
+          ${hasProsCons ? `
+            <div class="pros-cons">
+              <div class="pc-box pros">
+                <h5>👍 Плюсы</h5>
+                ${p.pros.length ? `<ul>${p.pros.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>` : '<div>Не указаны</div>'}
+              </div>
+              <div class="pc-box cons">
+                <h5>👎 Минусы</h5>
+                ${p.cons.length ? `<ul>${p.cons.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>` : '<div>Не указаны</div>'}
+              </div>
+            </div>` : `<div class="empty-pane">Плюсы и минусы не указаны</div>`}
+        </div>`;
+    }).join('');
+    return;
+  }
+
+  if(cmpActiveTab === 'reviews'){
+    const summaryHtml = `
+      <div class="cmp-reviews-summary">
+        <div class="cmp-rev-sum-title">📊 Быстрая сводка по отзывам</div>
+        ${list.map((p, idx)=>{
+          const revs = p.reviews || [];
+          const prosCount = revs.reduce((sum, r)=>sum + (r.pros ? r.pros.length : 0), 0);
+          const consCount = revs.reduce((sum, r)=>sum + (r.cons ? r.cons.length : 0), 0);
+          const defCount = revs.reduce((sum, r)=>sum + (r.defects ? r.defects.length : 0), 0);
+          return `
+            <div class="cmp-rev-sum-row">
+              <div class="cmp-rev-sum-head"><span class="cmp-dot c-${idx}">${idx+1}</span><span>${esc(shortProdLabel(p))}</span></div>
+              <div class="cmp-rev-sum-badges">
+                <span class="cmp-stat-pill">Отзывов: ${revs.length}</span>
+                ${prosCount ? `<span class="cmp-stat-pill pro">+ Плюсов: ${prosCount}</span>` : ''}
+                ${consCount ? `<span class="cmp-stat-pill con">− Минусов: ${consCount}</span>` : ''}
+                ${defCount ? `<span class="cmp-stat-pill defect">⚠ Упоминаний брака: ${defCount}</span>` : (revs.length ? `<span class="cmp-stat-pill">✓ Жалоб на брак нет</span>` : '')}
+              </div>
+            </div>`;
+        }).join('')}
+      </div>`;
+
+    const detailsHtml = list.map((p, idx)=>`
+      <div class="cmp-prod-section">
+        <div class="cmp-prod-section-head">
+          <span class="cmp-dot c-${idx}">${idx+1}</span>
+          <span>${esc(shortProdLabel(p))}</span>
+        </div>
+        ${(p.reviews && p.reviews.length) ? p.reviews.map(r=>`
+          <div class="review-card">
+            ${r.source ? `<div class="review-source">💬 ${esc(r.source)}</div>` : ''}
+            ${r.text ? `<div class="review-text">${esc(r.text)}</div>` : ''}
+            ${r.pros.length ? `<div class="review-row">${r.pros.map(x=>`<span class="review-badge pro">+ ${esc(x)}</span>`).join('')}</div>` : ''}
+            ${r.cons.length ? `<div class="review-row">${r.cons.map(x=>`<span class="review-badge con">− ${esc(x)}</span>`).join('')}</div>` : ''}
+            ${r.defects.length ? `<div class="review-row">${r.defects.map(x=>`<span class="review-badge defect">⚠ ${esc(x)}</span>`).join('')}</div>` : ''}
+          </div>`).join('') : `<div class="empty-pane">Отзывов пока нет</div>`}
+      </div>`).join('');
+
+    box.innerHTML = summaryHtml + detailsHtml;
+  }
+}
+
+document.getElementById('compareOpenBtn').onclick = openCompare;
+document.getElementById('compareClearBtn').onclick = clearCompare;
+document.getElementById('compareCloseBtn').onclick = closeCompare;
+
+document.getElementById('cmpTabs').addEventListener('click', e=>{
+  const tab = e.target.closest('.d-tab');
+  if(!tab) return;
+  cmpActiveTab = tab.dataset.cmpTab;
+  document.querySelectorAll('#cmpTabs .d-tab').forEach(t=>t.classList.toggle('active', t===tab));
+  renderCompareModal();
+});
+
+document.getElementById('cmpDiffToggle').onclick = ()=>{
+  cmpOnlyDiff = !cmpOnlyDiff;
+  renderCompareModal();
+};
+
+document.getElementById('cmpProductsStrip').addEventListener('click', e=>{
+  const btn = e.target.closest('[data-cmp-remove]');
+  if(!btn) return;
+  const pid = btn.dataset.cmpRemove;
+  compareIds = compareIds.filter(id=>id !== pid);
+  syncCompareButtonsInList();
+  updateCompareBar();
+  if(compareIds.length < 2){
+    closeCompare();
+    toast('Для сравнения нужно минимум 2 товара');
+  } else {
+    renderCompareModal();
   }
 });
 
@@ -907,6 +1366,7 @@ document.getElementById('catsGrid').addEventListener('click', async e=>{
   priceMinK = null;
   priceMaxK = null;
   prodSort = null;
+  clearCompare();
 
   document.getElementById('prodSearch').value = '';
   document.getElementById('priceMin').value = '';
@@ -922,6 +1382,7 @@ document.getElementById('catsGrid').addEventListener('click', async e=>{
 
 document.getElementById('backBtn').onclick = ()=>{
   currentCat = null;
+  clearCompare();
   document.getElementById('categoryView').style.display = 'none';
   document.getElementById('homeView').style.display = 'block';
 };
@@ -929,6 +1390,7 @@ document.getElementById('backBtn').onclick = ()=>{
 document.getElementById('mainTabs').addEventListener('click', e=>{
   const tab = e.target.closest('.tab'); if(!tab) return;
   const name = tab.dataset.tab;
+  clearCompare();
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t===tab));
   document.getElementById('homeView').style.display = name==='home' ? 'block' : 'none';
   document.getElementById('categoryView').style.display = 'none';
@@ -1054,6 +1516,7 @@ async function loadGlossaryData(){
     if(activeGSection) renderGBrands();
     if(activeGSection && activeGBrand) renderTerms();
     if(currentCat) renderProducts();
+    if(document.getElementById('compareModal').classList.contains('show')) renderCompareModal();
   }catch(e){
     console.error(e);
     toast('Ошибка загрузки справочника', true);
@@ -1432,6 +1895,7 @@ document.getElementById('qtGoGlossary').onclick = ()=>{
   document.getElementById('quickTermDlg').classList.remove('show');
   if(!currentQuickTerm) return;
 
+  clearCompare();
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active', tab.dataset.tab === 'glossary'));
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('categoryView').style.display = 'none';
