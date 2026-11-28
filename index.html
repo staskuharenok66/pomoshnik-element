@@ -62,7 +62,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .price-range input{width:100%;min-width:70px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);outline:none}
 .price-range span{font-size:13px;color:var(--muted);white-space:nowrap}
 
-/* === КАРТОЧКА ТОВАРА === */
 .product-card{width:100%;background:var(--card);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px;border:1px solid var(--border);transition:border-color .2s,box-shadow .2s}
 .product-card.open{border-color:var(--accent);box-shadow:0 6px 22px rgba(79,109,245,.14)}
 
@@ -87,11 +86,9 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .compare-toggle-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
 .compare-toggle-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-/* Развёрнутая часть карточки */
 .product-card .details{display:none;padding:12px 14px 14px;border-top:1px solid var(--border);min-width:0}
 .product-card.open .details{display:block}
 
-/* Кнопки-вкладки внутри карточки */
 .detail-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:6px;background:var(--bg);border-radius:14px;border:1px solid var(--border)}
 .d-tab{flex:1 1 auto;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;cursor:pointer;text-align:center;line-height:1.25;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
 .d-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 6px rgba(79,109,245,.25)}
@@ -100,7 +97,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .d-pane.active{display:block}
 .empty-pane{font-size:13.5px;color:var(--muted);text-align:center;padding:16px 10px;background:var(--bg);border-radius:12px;border:1px dashed var(--border)}
 
-/* Характеристики */
 .spec-group{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-top:10px}
 .spec-group:first-child{margin-top:0}
 .spec-group h4{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
@@ -109,18 +105,15 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .spec-row span:first-child{color:var(--muted);min-width:0;overflow-wrap:anywhere}
 .spec-row span:last-child{font-weight:600;text-align:right;min-width:0;overflow-wrap:anywhere}
 
-/* Характеристики ИИ — вертикальное чтение длинных описаний */
 .spec-group.ai-group{border-left:3px solid var(--accent)}
 .spec-group.ai-group .spec-row{flex-direction:column;gap:3px;padding:8px 0}
 .spec-group.ai-group .spec-row span:first-child{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
 .spec-group.ai-group .spec-row span:last-child{text-align:left;font-weight:500;font-size:14px;color:var(--text)}
 
-/* Особенности */
 .features-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:2px}
 .features-list li{position:relative;font-size:14px;line-height:1.45;padding:9px 12px 9px 34px;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow-wrap:anywhere}
 .features-list li::before{content:"✓";position:absolute;left:10px;top:10px;width:18px;height:18px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
 
-/* Плюсы и минусы */
 .pros-cons{display:grid;grid-template-columns:1fr;gap:10px;margin-top:2px}
 @media (min-width:520px){.pros-cons{grid-template-columns:1fr 1fr}}
 .pc-box{padding:12px;border-radius:12px;font-size:13.5px;min-width:0;overflow-wrap:anywhere;border:1px solid transparent}
@@ -130,7 +123,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .pc-box ul{padding-left:16px;display:flex;flex-direction:column;gap:5px}
 .pc-box li{color:var(--text);line-height:1.4}
 
-/* Отзывы */
 .review-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:8px;overflow-wrap:anywhere}
 .review-card:first-child{margin-top:0}
 .review-source{display:inline-block;font-size:11.5px;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:2px 8px;border-radius:8px;margin-bottom:7px}
@@ -144,14 +136,12 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 
 .admin-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 
-/* === ПЛАВАЮЩАЯ ПАНЕЛЬ СРАВНЕНИЯ === */
 .compare-bar{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 24px);max-width:var(--maxw);z-index:80;background:var(--card);border:1.5px solid var(--accent);border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:10px 12px;display:none;align-items:center;justify-content:space-between;gap:10px}
 .compare-bar.show{display:flex}
 .compare-bar-info{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--text)}
 .compare-bar-sub{font-size:12px;font-weight:500;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .compare-bar-actions{display:flex;gap:6px;flex-shrink:0}
 
-/* === ОКНО СРАВНЕНИЯ ТОВАРОВ === */
 .compare-modal{position:fixed;inset:0;z-index:95;background:var(--bg);display:none;flex-direction:column;padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 .compare-modal.show{display:flex}
 .cmp-topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
@@ -159,7 +149,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .cmp-scroll{flex:1;overflow-y:auto;padding:12px 12px calc(28px + env(safe-area-inset-bottom))}
 .cmp-inner{max-width:var(--maxw);margin:0 auto}
 
-/* Мини-карточки сравниваемых товаров */
 .cmp-products-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
 @media (min-width:600px){.cmp-products-strip.cols-3{grid-template-columns:repeat(3,1fr)}.cmp-products-strip.cols-4{grid-template-columns:repeat(4,1fr)}}
 .cmp-prod-mini{position:relative;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);min-width:0}
@@ -175,19 +164,16 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .cmp-best-price{font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:6px;background:var(--good-bg);color:var(--good);white-space:nowrap}
 .cmp-remove-btn{position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-/* Цветные метки товаров 1..4 */
 .cmp-dot{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:5px;color:#fff;font-size:10.5px;font-weight:800;flex-shrink:0}
 .cmp-dot.c-0{background:#4f6df5}
 .cmp-dot.c-1{background:#16a34a}
 .cmp-dot.c-2{background:#d97706}
 .cmp-dot.c-3{background:#9333ea}
 
-/* Переключатель "Только отличия" */
 .cmp-filter-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .cmp-diff-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-weight:600;cursor:pointer}
 .cmp-diff-btn.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
 
-/* Блоки сравнения характеристик */
 .cmp-group-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
 .cmp-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--border)}
 .cmp-param{padding:8px 0;border-bottom:1px dashed var(--border)}
@@ -210,7 +196,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .cmp-val-text.ai-text{font-weight:500;line-height:1.45}
 .cmp-val-text.empty-val{color:var(--muted);font-weight:400}
 
-/* Секции по товарам для Особенностей, Плюсов/Минусов, Отзывов */
 .cmp-prod-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
 .cmp-prod-section-head{display:flex;align-items:center;gap:8px;padding-bottom:8px;margin-bottom:10px;border-bottom:1px solid var(--border);font-size:14.5px;font-weight:700}
 
@@ -241,7 +226,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .toast{background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s}
 .toast.show{opacity:1;transform:translateY(0)}
 
-/* Справочник: 3-уровневая навигация и прямоугольные кнопки */
 .rect-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .rect-btn{position:relative;display:flex;align-items:center;gap:14px;width:100%;min-height:62px;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);color:var(--text);text-align:left;cursor:pointer;transition:transform .1s}
 .rect-btn:active{transform:scale(.98)}
@@ -253,7 +237,11 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .rect-btn .r-arrow{font-size:18px;color:var(--muted);flex-shrink:0}
 .rect-del{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--bad);font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
-/* Карточки терминов */
+.template-box{background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.template-box-title{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.template-btns{display:flex;gap:8px;flex-wrap:wrap}
+.sugg-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
 .term-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px;margin-bottom:10px;border:1px solid var(--border);cursor:pointer}
 .term-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .term-title{font-size:16px;font-weight:700;color:var(--text)}
@@ -263,7 +251,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
 .term-details{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);font-size:14px;color:var(--text);line-height:1.5;white-space:pre-line}
 .term-card.open .term-details{display:block}
 
-/* Кликабельные ссылки на термины внутри карточки товара */
 .term-link{color:var(--accent);font-weight:700;border-bottom:1.5px dashed var(--accent);cursor:pointer;padding:0 2px;border-radius:4px;transition:background .15s}
 .term-link:active{background:var(--accent-soft)}
 .term-link::after{content:" ℹ️";font-size:11px;vertical-align:super}
@@ -321,7 +308,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 
   <div id="glossaryView">
-    <!-- ЭКРАН 1: Виды техники -->
     <div id="gStepSections">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px">
         <div class="cat-title" style="margin:0">Справочник: виды техники</div>
@@ -330,7 +316,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
       <div class="rect-list" id="gSectionsList"></div>
     </div>
 
-    <!-- ЭКРАН 2: Бренды выбранного вида техники -->
     <div id="gStepBrands" style="display:none">
       <button class="back-btn" id="gBackToSections">← Назад к видам техники</button>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
@@ -340,12 +325,15 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
       <div class="rect-list" id="gBrandsList"></div>
     </div>
 
-    <!-- ЭКРАН 3: Термины выбранного бренда -->
     <div id="gStepTerms" style="display:none">
       <button class="back-btn" id="gBackToBrands">← Назад к брендам</button>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
         <div class="cat-title" id="gBrandTitle"></div>
-        <button class="btn small" id="addTermBtn" style="display:none">+ Термин</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn secondary small" id="gExportBtn" style="display:none">📤 Экспорт</button>
+          <button class="btn secondary small" id="gImportBtn" style="display:none">📥 Импорт</button>
+          <button class="btn small" id="addTermBtn" style="display:none">+ Термин</button>
+        </div>
       </div>
       <div class="filters-panel">
         <input type="search" class="search-input" id="termSearch" placeholder="Поиск по терминам и особенностям..." autocomplete="off">
@@ -355,7 +343,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Плавающая панель сравнения -->
 <div class="compare-bar" id="compareBar">
   <div class="compare-bar-info" id="compareBarInfo"></div>
   <div class="compare-bar-actions">
@@ -364,7 +351,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Окно сравнения товаров -->
 <div class="compare-modal" id="compareModal">
   <div class="cmp-topbar">
     <h2>⚖️ Сравнение товаров</h2>
@@ -478,10 +464,13 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Диалог раздела справочника -->
 <div class="dlg" id="gSecDlg">
   <div class="dlg-box">
     <h3>Новый вид техники</h3>
+    <div class="field" id="gSecSuggWrap" style="display:none">
+      <label>Быстрый выбор из категорий каталога (для точной подсветки)</label>
+      <div class="sugg-chips" id="gSecSuggestions"></div>
+    </div>
     <div class="field">
       <label>Название</label>
       <input type="text" id="gsName" placeholder="Телевизоры">
@@ -497,7 +486,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Диалог бренда справочника -->
 <div class="dlg" id="gBrandDlg">
   <div class="dlg-box">
     <h3>Новый бренд в разделе</h3>
@@ -516,7 +504,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Диалог термина / особенности -->
 <div class="dlg" id="termDlg">
   <div class="dlg-box">
     <h3 id="termDlgTitle">Новый термин</h3>
@@ -543,7 +530,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Окно быстрой подсказки по термину из карточки товара -->
 <div class="dlg" id="quickTermDlg">
   <div class="dlg-box">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
@@ -559,7 +545,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Экспорт -->
 <div class="dlg" id="exportDlg">
   <div class="dlg-box">
     <h3>Экспорт товаров</h3>
@@ -574,7 +559,6 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
   </div>
 </div>
 
-<!-- Импорт -->
 <div class="dlg" id="importDlg">
   <div class="dlg-box">
     <h3>Импорт товаров</h3>
@@ -590,6 +574,47 @@ h1{font-size:19px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overfl
     <div class="dlg-actions">
       <button class="btn secondary" id="importCancel">Отмена</button>
       <button class="btn" id="importDo" disabled>Импортировать</button>
+    </div>
+  </div>
+</div>
+
+<div class="dlg" id="gExportDlg">
+  <div class="dlg-box">
+    <h3>Экспорт терминов справочника</h3>
+    <div id="gExportInfo" style="font-size:14px;color:var(--muted);margin-bottom:12px"></div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:6px">
+      Будет скачан JSON-файл с терминами <b>текущего выбора</b>. Его можно дополнять или использовать как образец для импорта.
+    </div>
+    <div class="dlg-actions">
+      <button class="btn secondary" id="gExportCancel">Отмена</button>
+      <button class="btn" id="gExportDo">Скачать файл</button>
+    </div>
+  </div>
+</div>
+
+<div class="dlg" id="gImportDlg">
+  <div class="dlg-box">
+    <h3>Импорт терминов справочника</h3>
+    <div id="gImportTargetInfo" style="font-size:14px;font-weight:600;margin-bottom:10px"></div>
+
+    <div class="template-box">
+      <div class="template-box-title">Трафарет для заполнения (ИИ или вручную)</div>
+      <div class="template-btns">
+        <button type="button" class="btn secondary small" id="gTemplateDownloadBtn">📄 Скачать трафарет (.json)</button>
+        <button type="button" class="btn secondary small" id="gTemplateCopyBtn">📋 Копировать JSON</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Загрузить заполненный файл (.json)</label>
+      <input type="file" id="gImportFile" accept=".json,application/json">
+    </div>
+    <div id="gImportPreview" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
+    <div id="gImportHint" style="font-size:13px;color:var(--muted);margin-bottom:6px"></div>
+
+    <div class="dlg-actions">
+      <button class="btn secondary" id="gImportCancel">Отмена</button>
+      <button class="btn" id="gImportDo" disabled>Импортировать</button>
     </div>
   </div>
 </div>
@@ -671,13 +696,12 @@ function parseReviews(text){
 async function loadProducts(catId){
   const box = document.getElementById('productsList');
   box.innerHTML = `<div class="empty">Загрузка товаров...</div>`;
-  products = []; // Обязательно очищаем список перед загрузкой новой категории
+  products = [];
   try{
     const q = query(collection(db, 'products'), where('categoryId', '==', catId));
     const snapshot = await getDocs(q);
     snapshot.forEach(d=>{
       const x = d.data();
-      // Жесткая проверка: берем товар ТОЛЬКО если его categoryId совпадает с открытой категорией
       if(x.categoryId === catId){
         products.push({
           id: d.id,
@@ -792,7 +816,7 @@ function renderProducts(){
             ${hasSpecs ? Object.keys(groups).map(g=>`
               <div class="spec-group">
                 <h4>${esc(g)}</h4>
-                ${groups[g].map(s=>`<div class="spec-row"><span>${esc(s.key)}</span><span>${linkifyTerms(s.value, p.brand)}</span></div>`).join('')}
+                ${groups[g].map(s=>`<div class="spec-row"><span>${linkifyTerms(s.key, p.brand)}</span><span>${linkifyTerms(s.value, p.brand)}</span></div>`).join('')}
               </div>`).join('') : '<div class="empty-pane">Характеристики не указаны</div>'}
           </div>
           <div class="d-pane" data-pane-box="features">
@@ -822,7 +846,7 @@ function renderProducts(){
               return Object.keys(aiGroups).length ? Object.keys(aiGroups).map(g=>`
                 <div class="spec-group ai-group">
                   <h4>✨ ${esc(g)}</h4>
-                  ${aiGroups[g].map(s=>`<div class="spec-row"><span>${esc(s.key)}</span><span>${linkifyTerms(s.value, p.brand)}</span></div>`).join('')}
+                  ${aiGroups[g].map(s=>`<div class="spec-row"><span>${linkifyTerms(s.key, p.brand)}</span><span>${linkifyTerms(s.value, p.brand)}</span></div>`).join('')}
                 </div>`).join('') : '<div class="empty-pane">Характеристики ИИ не добавлены</div>';
             })()}
           </div>
@@ -906,9 +930,6 @@ document.getElementById('productsList').addEventListener('click', async e=>{
   }
 });
 
-// ============================================
-// СРАВНЕНИЕ ТОВАРОВ
-// ============================================
 function syncCompareButtonsInList(){
   document.querySelectorAll('.compare-toggle-btn').forEach(btn=>{
     const active = compareIds.includes(btn.dataset.cmpId);
@@ -997,7 +1018,6 @@ function renderCompareModal(){
     return;
   }
 
-  // Лучшая (минимальная) цена
   const validPrices = list.map(p=>p.price).filter(pr=>pr !== null && pr !== undefined && !isNaN(pr));
   const minPrice = validPrices.length >= 2 ? Math.min(...validPrices) : null;
   const allSamePrice = validPrices.length >= 2 && validPrices.every(pr=>pr === minPrice);
@@ -1031,7 +1051,6 @@ function renderCompareModal(){
 }
 
 function renderCompareSpecsSection(list, fieldName, isAi){
-  // Собираем все уникальные группы и ключи с сохранением порядка
   const groupOrder = [];
   const groupKeysMap = {};
 
@@ -1067,10 +1086,11 @@ function renderCompareSpecsSection(list, fieldName, isAi){
       if(cmpOnlyDiff && !hasDiff) return '';
 
       const gridClass = isAi ? 'stack-col' : (list.length === 2 ? 'two-col' : `cols-${list.length}`);
+      const firstBrand = list[0] ? list[0].brand : '';
       return `
         <div class="cmp-param${hasDiff ? ' is-diff' : ''}">
           <div class="cmp-param-head">
-            <span class="cmp-param-key">${esc(k)}</span>
+            <span class="cmp-param-key">${linkifyTerms(k, firstBrand)}</span>
             ${hasDiff ? `<span class="cmp-diff-tag">отличие</span>` : ''}
           </div>
           <div class="cmp-vals-grid ${gridClass}">
@@ -1441,6 +1461,8 @@ onAuthStateChanged(auth, (user)=>{
   document.getElementById('addGSecBtn').style.display = isAdmin ? '' : 'none';
   document.getElementById('addTermBtn').style.display = isAdmin ? '' : 'none';
   document.getElementById('addGBrandBtn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('gExportBtn').style.display = isAdmin ? '' : 'none';
+  document.getElementById('gImportBtn').style.display = isAdmin ? '' : 'none';
   if(activeGSection) renderGBrands();
   renderGSections();
   renderTerms();
@@ -1458,9 +1480,6 @@ document.getElementById('themeBtn').onclick = ()=>{
   applyTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
 };
 
-// ============================================
-// СПРАВОЧНИК: 3-УРОВНЕВАЯ НАВИГАЦИЯ
-// ============================================
 let gSections = [];
 let gBrands = [];
 let terms = [];
@@ -1523,7 +1542,6 @@ async function loadGlossaryData(){
   }
 }
 
-// ЭКРАН 1: Виды техники
 function renderGSections(){
   const box = document.getElementById('gSectionsList');
   if(!gSections.length){
@@ -1532,19 +1550,19 @@ function renderGSections(){
   }
   box.innerHTML = gSections.map(s=>{
     const count = gBrands.filter(b=>b.sectionId === s.id).length;
+    const tCount = terms.filter(t=>t.sectionId === s.id).length;
     return `
       <div class="rect-btn" data-gsec="${esc(s.id)}">
         <div class="r-ico">${esc(s.icon)}</div>
         <div class="r-info">
           <div class="r-title">${esc(s.name)}</div>
-          <div class="r-sub">Брендов: ${count}</div>
+          <div class="r-sub">Брендов: ${count} · Терминов: ${tCount}</div>
         </div>
         ${isAdmin ? `<button class="rect-del" data-del-gsec="${esc(s.id)}" title="Удалить">✕</button>` : `<div class="r-arrow">›</div>`}
       </div>`;
   }).join('');
 }
 
-// ЭКРАН 2: Бренды выбранного вида техники
 function renderGBrands(){
   if(!activeGSection) return;
   const box = document.getElementById('gBrandsList');
@@ -1580,7 +1598,6 @@ function renderGBrands(){
   box.innerHTML = html;
 }
 
-// ЭКРАН 3: Термины выбранного бренда
 function renderTerms(){
   if(!activeGSection || !activeGBrand) return;
   const box = document.getElementById('termsList');
@@ -1599,7 +1616,7 @@ function renderTerms(){
   }
 
   if(!list.length){
-    box.innerHTML = `<div class="empty">${termQuery ? 'По запросу ничего не найдено.' : 'Терминов пока нет.'}${isAdmin && !termQuery ? ' Нажмите «+ Термин».' : ''}</div>`;
+    box.innerHTML = `<div class="empty">${termQuery ? 'По запросу ничего не найдено.' : 'Терминов пока нет.'}${isAdmin && !termQuery ? ' Нажмите «+ Термин» или «📥 Импорт».' : ''}</div>`;
     return;
   }
 
@@ -1626,7 +1643,6 @@ function renderTerms(){
   }).join('');
 }
 
-// Навигация Справочника: Экран 1 -> Экран 2
 document.getElementById('gSectionsList').addEventListener('click', async e=>{
   const delBtn = e.target.closest('[data-del-gsec]');
   if(delBtn && isAdmin){
@@ -1650,7 +1666,6 @@ document.getElementById('gSectionsList').addEventListener('click', async e=>{
   showGlossaryStep('brands');
 });
 
-// Навигация Справочника: Экран 2 -> Экран 3
 document.getElementById('gBrandsList').addEventListener('click', async e=>{
   const delBtn = e.target.closest('[data-del-gbrand]');
   if(delBtn && isAdmin){
@@ -1683,7 +1698,6 @@ document.getElementById('gBrandsList').addEventListener('click', async e=>{
   showGlossaryStep('terms');
 });
 
-// Кнопки «Назад» внутри Справочника
 document.getElementById('gBackToSections').onclick = ()=>{
   activeGSection = null;
   showGlossaryStep('sections');
@@ -1693,7 +1707,6 @@ document.getElementById('gBackToBrands').onclick = ()=>{
   showGlossaryStep('brands');
 };
 
-// Поиск и карточки терминов
 let termTimer = null;
 document.getElementById('termSearch').addEventListener('input', e=>{
   const v = e.target.value.trim();
@@ -1731,12 +1744,31 @@ document.getElementById('termsList').addEventListener('click', async e=>{
   if(card) card.classList.toggle('open');
 });
 
-// Модальные окна Справочника (Раздел, Бренд, Термин)
 document.getElementById('addGSecBtn').onclick = ()=>{
   document.getElementById('gsName').value = '';
   document.getElementById('gsIcon').value = '';
+
+  const existingNames = new Set(gSections.map(s=>s.name.trim().toLowerCase()));
+  const missingCats = categories.filter(c=>!existingNames.has(c.name.trim().toLowerCase()));
+  const wrap = document.getElementById('gSecSuggWrap');
+  const box = document.getElementById('gSecSuggestions');
+
+  if(missingCats.length){
+    box.innerHTML = missingCats.map(c=>`<button type="button" class="chip" data-sugg-name="${esc(c.name)}" data-sugg-icon="${esc(c.emoji)}">${esc(c.emoji)} ${esc(c.name)}</button>`).join('');
+    wrap.style.display = 'block';
+  } else {
+    box.innerHTML = '';
+    wrap.style.display = 'none';
+  }
+
   document.getElementById('gSecDlg').classList.add('show');
 };
+document.getElementById('gSecSuggestions').addEventListener('click', e=>{
+  const chip = e.target.closest('[data-sugg-name]');
+  if(!chip) return;
+  document.getElementById('gsName').value = chip.dataset.suggName;
+  document.getElementById('gsIcon').value = chip.dataset.suggIcon;
+});
 document.getElementById('gsCancel').onclick = ()=>document.getElementById('gSecDlg').classList.remove('show');
 document.getElementById('gsSave').onclick = async ()=>{
   if(!isAdmin) return;
@@ -1811,9 +1843,309 @@ document.getElementById('termSave').onclick = async ()=>{
   }catch(e){ toast('Ошибка: ' + (e.code || e.message), true); }
 };
 
-// ============================================
-// БЫСТРЫЕ ССЫЛКИ НА ТЕРМИНЫ В КАРТОЧКАХ ТОВАРОВ
-// ============================================
+let gImportData = null;
+
+function getCurrentGlossaryExportList(){
+  if(!activeGSection || !activeGBrand) return [];
+  let list = terms.filter(t=>t.sectionId === activeGSection.id);
+  if(activeGBrand !== '__ALL__'){
+    list = list.filter(t=>t.brandId === activeGBrand.id);
+  }
+  return list;
+}
+
+function buildGlossaryTemplateObject(){
+  const secName = activeGSection ? activeGSection.name : 'Категория';
+  const isAll = activeGBrand === '__ALL__';
+  const brandName = isAll ? '' : activeGBrand.name;
+
+  if(isAll){
+    return {
+      app: 'pomoshnik-prodavca-glossary',
+      version: 1,
+      section: secName,
+      brand: '',
+      _comment: `Трафарет терминов для категории «${secName}» (несколько брендов). Замените примеры в массиве terms на реальные термины: brand — название бренда (например LG, Samsung, TCL; оставьте пустым для общего термина), title — точное слово/аббревиатура из карточки товара для автоподсветки, short — краткая расшифровка для продавца (1-2 предложения), details — подробности и польза для покупателя.`,
+      terms: [
+        {
+          brand: 'Пример: Бренд (или оставьте пустым)',
+          title: 'Пример: Название термина или аббревиатуры',
+          short: 'Краткая расшифровка простыми словами для быстрого ответа покупателю.',
+          details: 'Подробное объяснение технологии или параметра: что даёт на практике и на что обратить внимание.'
+        }
+      ]
+    };
+  }
+
+  return {
+    app: 'pomoshnik-prodavca-glossary',
+    version: 1,
+    section: secName,
+    brand: brandName,
+    _comment: `Трафарет терминов для категории «${secName}», бренд «${brandName}». Замените пример в массиве terms на реальные термины: title — точное слово/аббревиатура из карточки товара для автоподсветки, short — краткая расшифровка простыми словами для продавца (1-2 предложения), details — подробное описание и польза для покупателя.`,
+    terms: [
+      {
+        title: 'Пример: Название фишки, технологии или параметра',
+        short: 'Краткая расшифровка простыми словами для быстрого ответа покупателю.',
+        details: 'Подробное объяснение: как работает, какие плюсы даёт и чем отличается от обычных решений.'
+      }
+    ]
+  };
+}
+
+function makeTermKey(brandId, title){
+  return [
+    String(brandId || '').trim(),
+    String(title || '').trim().toLowerCase()
+  ].join('||');
+}
+
+document.getElementById('gExportBtn').onclick = ()=>{
+  if(!activeGSection || !activeGBrand){ toast('Сначала откройте раздел', true); return; }
+  const list = getCurrentGlossaryExportList();
+  if(!list.length){
+    toast('Терминов пока нет. Трафарет можно скачать через «Импорт»', true);
+    return;
+  }
+  const targetName = activeGBrand === '__ALL__'
+    ? `Все бренды (${activeGSection.name})`
+    : `${activeGBrand.icon} ${activeGBrand.name} (${activeGSection.name})`;
+  document.getElementById('gExportInfo').innerHTML =
+    `Раздел: <b>${esc(activeGSection.icon)} ${esc(targetName)}</b><br>Терминов к экспорту: <b>${list.length}</b>`;
+  document.getElementById('gExportDlg').classList.add('show');
+};
+document.getElementById('gExportCancel').onclick = ()=>document.getElementById('gExportDlg').classList.remove('show');
+
+document.getElementById('gExportDo').onclick = ()=>{
+  if(!activeGSection || !activeGBrand) return;
+  const list = getCurrentGlossaryExportList();
+  if(!list.length) return;
+  try{
+    const isAll = activeGBrand === '__ALL__';
+    const payload = {
+      app: 'pomoshnik-prodavca-glossary',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      section: activeGSection.name,
+      brand: isAll ? '' : activeGBrand.name,
+      terms: list.map(t=>{
+        if(isAll){
+          const bObj = gBrands.find(b=>b.id === t.brandId);
+          return {
+            brand: bObj ? bObj.name : '',
+            title: t.title || '',
+            short: t.short || '',
+            details: t.details || ''
+          };
+        }
+        return {
+          title: t.title || '',
+          short: t.short || '',
+          details: t.details || ''
+        };
+      })
+    };
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0,10);
+    const safeSec = activeGSection.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
+    const safeBrand = isAll ? 'ALL' : activeGBrand.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
+    a.href = url;
+    a.download = `terms-${safeSec}-${safeBrand}-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    document.getElementById('gExportDlg').classList.remove('show');
+    toast(`Экспортировано терминов: ${list.length}`);
+  }catch(e){
+    console.error(e);
+    toast('Ошибка экспорта: ' + (e.code || e.message), true);
+  }
+};
+
+document.getElementById('gImportBtn').onclick = ()=>{
+  if(!activeGSection || !activeGBrand){ toast('Сначала откройте раздел', true); return; }
+  gImportData = null;
+  document.getElementById('gImportFile').value = '';
+  document.getElementById('gImportPreview').textContent = '';
+  document.getElementById('gImportDo').disabled = true;
+
+  const isAll = activeGBrand === '__ALL__';
+  document.getElementById('gImportTargetInfo').innerHTML = isAll
+    ? `Импорт в раздел: <b>${esc(activeGSection.icon)} ${esc(activeGSection.name)} (по брендам из файла)</b>`
+    : `Импорт в бренд: <b>${esc(activeGBrand.icon)} ${esc(activeGBrand.name)}</b> (${esc(activeGSection.name)})`;
+
+  document.getElementById('gImportHint').innerHTML = isAll
+    ? `⚠️ При импорте в «Все термины раздела» каждый термин привяжется к бренду из поля <code>brand</code> (недостающие бренды создадутся автоматически). Одинаковые термины обновятся.`
+    : `⚠️ Все термины из файла будут привязаны к бренду <b>${esc(activeGBrand.name)}</b>. Термины с одинаковым <b>названием (title)</b> будут <b>обновлены</b>, а не задвоены.`;
+
+  document.getElementById('gImportDlg').classList.add('show');
+};
+document.getElementById('gImportCancel').onclick = ()=>document.getElementById('gImportDlg').classList.remove('show');
+
+document.getElementById('gTemplateDownloadBtn').onclick = ()=>{
+  if(!activeGSection || !activeGBrand) return;
+  const tpl = buildGlossaryTemplateObject();
+  const blob = new Blob([JSON.stringify(tpl, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeSec = activeGSection.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
+  const safeBrand = activeGBrand === '__ALL__' ? 'ALL' : activeGBrand.name.replace(/[^\wа-яА-ЯёЁ\-]+/g, '_');
+  a.href = url;
+  a.download = `template-terms-${safeSec}-${safeBrand}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  toast('Трафарет скачан');
+};
+
+document.getElementById('gTemplateCopyBtn').onclick = async ()=>{
+  const tpl = buildGlossaryTemplateObject();
+  const text = JSON.stringify(tpl, null, 2);
+  try{
+    await navigator.clipboard.writeText(text);
+    toast('JSON-трафарет скопирован');
+  }catch(err){
+    toast('Не удалось скопировать — используйте скачивание', true);
+  }
+};
+
+document.getElementById('gImportFile').onchange = async (e)=>{
+  const file = e.target.files[0];
+  const preview = document.getElementById('gImportPreview');
+  const btn = document.getElementById('gImportDo');
+  gImportData = null;
+  btn.disabled = true;
+
+  if(!file){ preview.textContent = ''; return; }
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const rawList = Array.isArray(data) ? data : (data && Array.isArray(data.terms) ? data.terms : null);
+
+    if(!rawList){
+      preview.textContent = '❌ Неверный формат файла: нужен массив terms[].';
+      return;
+    }
+
+    const topBrand = (!Array.isArray(data) && data.brand) ? String(data.brand).trim() : '';
+    const valid = rawList.map(item=>{
+      if(!item || typeof item !== 'object') return null;
+      const title = String(item.title ?? item.name ?? item.term ?? '').trim();
+      if(!title) return null;
+      return {
+        title,
+        short: String(item.short ?? item.description ?? item.desc ?? '').trim(),
+        details: String(item.details ?? item.full ?? '').trim(),
+        brand: String(item.brand ?? topBrand ?? '').trim()
+      };
+    }).filter(Boolean);
+
+    let warn = '';
+    if(!Array.isArray(data)){
+      if(data.section && activeGSection && String(data.section).trim().toLowerCase() !== activeGSection.name.trim().toLowerCase()){
+        warn += `<br>⚠️ В файле раздел «${esc(data.section)}», но импорт пойдёт в «${esc(activeGSection.name)}».`;
+      }
+      if(activeGBrand !== '__ALL__' && data.brand && String(data.brand).trim().toLowerCase() !== activeGBrand.name.trim().toLowerCase()){
+        warn += `<br>⚠️ В файле бренд «${esc(data.brand)}», но термины привяжутся к «${esc(activeGBrand.name)}».`;
+      }
+    }
+
+    preview.innerHTML = `✅ Прочитано терминов: <b>${valid.length}</b>.${warn}`;
+    gImportData = { terms: valid };
+    btn.disabled = valid.length === 0;
+  }catch(err){
+    console.error(err);
+    preview.textContent = '❌ Ошибка чтения файла: ' + err.message;
+  }
+};
+
+document.getElementById('gImportDo').onclick = async ()=>{
+  if(!isAdmin){ toast('Только администратор', true); return; }
+  if(!activeGSection || !activeGBrand){ toast('Раздел не открыт', true); return; }
+  if(!gImportData || !gImportData.terms.length){ toast('Нет данных', true); return; }
+
+  const btn = document.getElementById('gImportDo');
+  btn.disabled = true;
+  btn.textContent = 'Импорт...';
+
+  try{
+    const q = query(collection(db, 'glossary'), where('sectionId', '==', activeGSection.id));
+    const snap = await getDocs(q);
+    const existingMap = {};
+    snap.forEach(d=>{
+      const x = d.data();
+      if(x.sectionId !== activeGSection.id) return;
+      const key = makeTermKey(x.brandId || '', x.title || '');
+      if(!existingMap[key]) existingMap[key] = d.id;
+    });
+
+    const isAll = activeGBrand === '__ALL__';
+    let added = 0, updated = 0, skipped = 0, createdBrands = 0;
+
+    for(const item of gImportData.terms){
+      let targetBrandId = '';
+
+      if(!isAll){
+        targetBrandId = activeGBrand.id;
+      } else if(item.brand){
+        const bNorm = item.brand.trim().toLowerCase();
+        let foundBrand = gBrands.find(b=>b.sectionId === activeGSection.id && b.name.trim().toLowerCase() === bNorm);
+        if(!foundBrand){
+          const newBrandId = genId('gb');
+          const newBrandData = { sectionId: activeGSection.id, name: item.brand.trim(), icon: '🏷️' };
+          await setDoc(doc(db, 'glossary_brands', newBrandId), newBrandData);
+          foundBrand = { id: newBrandId, ...newBrandData };
+          gBrands.push(foundBrand);
+          createdBrands++;
+        }
+        targetBrandId = foundBrand.id;
+      }
+
+      const clean = {
+        sectionId: activeGSection.id,
+        brandId: targetBrandId,
+        title: item.title,
+        short: item.short,
+        details: item.details
+      };
+
+      const key = makeTermKey(targetBrandId, clean.title);
+      const targetId = existingMap[key];
+
+      try{
+        if(targetId){
+          await setDoc(doc(db, 'glossary', targetId), clean, { merge: false });
+          updated++;
+        } else {
+          const newId = genId('t');
+          await setDoc(doc(db, 'glossary', newId), clean);
+          existingMap[key] = newId;
+          added++;
+        }
+      }catch(err){
+        console.error('import term error', err, item);
+        skipped++;
+      }
+    }
+
+    await loadGlossaryData();
+    document.getElementById('gImportDlg').classList.remove('show');
+    toast(`Готово! Добавлено: ${added}, обновлено: ${updated}${createdBrands?`, новых брендов: ${createdBrands}`:''}${skipped?`, пропущено: ${skipped}`:''}`);
+  }catch(e){
+    console.error(e);
+    toast('Ошибка импорта: ' + (e.code || e.message), true);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Импортировать';
+  }
+};
+
 function linkifyTerms(rawText, productBrand = ''){
   const safe = esc(rawText);
   if(!terms.length || !safe || !currentCat) return safe;
@@ -1919,13 +2251,8 @@ document.getElementById('qtGoGlossary').onclick = ()=>{
   }
 };
 
-// ============================================
-// ЭКСПОРТ / ИМПОРТ ТОВАРОВ (внутри категории)
-// ============================================
-
 let importData = null;
 
-// ---- ЭКСПОРТ ----
 document.getElementById('exportBtn').onclick = ()=>{
   if(!currentCat){ toast('Сначала откройте категорию', true); return; }
   if(!products.length){ toast('В этой категории нет товаров', true); return; }
@@ -1978,7 +2305,6 @@ document.getElementById('exportDo').onclick = ()=>{
   }
 };
 
-// ---- ИМПОРТ ----
 document.getElementById('importBtn').onclick = ()=>{
   if(!currentCat){ toast('Сначала откройте категорию', true); return; }
   importData = null;
